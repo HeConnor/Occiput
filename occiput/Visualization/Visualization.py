@@ -56,7 +56,7 @@ class ProgressBar():
         if self.mode == "ipynb": 
             display(Javascript("$('div#%s').width('%i%%')" % (self._divid, percentage)))
         else: 
-            print "%2.1f / 100"%percentage
+            print("%2.1f / 100" % percentage)
 
     def get_percentage(self):
         return self._percentage
@@ -293,7 +293,7 @@ try:
     from NiftyPy.NiftyRec import SPECT_project_parallelholes as projection
 except: 
     has_NiftyPy = False
-    print "Please install NiftyPy"
+    print("Please install NiftyPy")
 else: 
     has_NiftyPy = True
 
@@ -344,9 +344,9 @@ class SPECT_Projection():
         N_projections = self.data.shape[2]
         N_x = self.data.shape[0]
         N_y = self.data.shape[1]
-        print "SPECT Projection   [N_projections: %d   N_x: %d   N_y: %d]"%(N_projections,N_x,N_y)
+        print("SPECT Projection   [N_projections: %d   N_x: %d   N_y: %d]" % (N_projections, N_x, N_y))
         for i in range( N_projections ): 
-                images.append( self.to_image(data,i,scale=scale,absolute_scale=True) ) 
+                images.append(self.to_image(data,i,scale=scale,absolute_scale=True))
                 progress_bar.set_percentage(i*100.0/N_projections)                         
         progress_bar.set_percentage(100.0)
         return d.display('tipix', images, open_browser)
@@ -580,6 +580,7 @@ class Graph():
 
 ## ipy_table 
 #FIXME: perhaps move this somewhere else
+
 
 try: 
     import ipy_table 
