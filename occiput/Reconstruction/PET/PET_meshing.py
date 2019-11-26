@@ -3,16 +3,13 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 __all__ = ["Michelogram"] 
-
 
 from occiput.Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite 
 from PIL import ImageDraw
 from PIL import Image as PIL 
 from numpy import isscalar, linspace, int32, uint32, ones, zeros, pi, sqrt, float32, float64, where, ndarray, nan
 from numpy import inf, asarray, concatenate, fromfile, maximum, exp, asfortranarray, fliplr, transpose 
-
 
 DEFAULT_SPAN = 11 
 
@@ -24,17 +21,21 @@ class Michelogram:
         n_rings = abs(int(n_rings))
         if (span/2)*2 == span: 
             span = span+1
-            print "Span must be odd, using span %d"%span
+            print("Span must be odd, using span %d" % span)
         if not self._verify_max_ring_difference(span, n_rings, max_ring_difference): 
             max_ring_difference_actual = self._largest_compatible_max_ring_difference(span, n_rings, max_ring_difference)
             compatible_max_ring_diff = self._compatible_max_ring_differences(span, n_rings)
             if compatible_max_ring_diff is []: 
-                print "Michelogram: No 'maximum_ring_difference' exists compatible with given 'span' and 'n_rings'. "
+                print("Michelogram: No 'maximum_ring_difference' exists compatible with given 'span' and 'n_rings'. ")
             elif max_ring_difference_actual is None: 
-                print "Michelogram: 'maximum_ring_difference' %d too small, using %d. "%(max_ring_difference,compatible_max_ring_diff[0])
+                print("Michelogram: 'maximum_ring_difference' %d too small, using %d. "
+                      % (max_ring_difference,compatible_max_ring_diff[0]))
                 max_ring_difference = compatible_max_ring_diff[0]
             else: 
-                print "Michelogram: 'maximum_ring_difference' %d is not compatible with 'span' %d. Compatible values are "%(max_ring_difference,span)+str(compatible_max_ring_diff)+". \nUsing %d"%max_ring_difference_actual
+                print("Michelogram: 'maximum_ring_difference' %d "
+                      "is not compatible with 'span' %d. Compatible values are "
+                      % (max_ring_difference,span) + str(compatible_max_ring_diff) +
+                      ". \nUsing %d" % max_ring_difference_actual)
                 max_ring_difference = max_ring_difference_actual
         self.n_rings = n_rings
         self.span = span 
@@ -147,10 +148,10 @@ class Michelogram:
     def display_michelogram(self, cmap='gray', figsize=[16,8]): 
         import matplotlib.pyplot as plt
         plt.figure(figsize=figsize)
-        plt.subplot(1,2,1); 
+        plt.subplot(1,2,1)
         plt.imshow(self.michelogram_plane,interpolation='nearest')
         plt.set_cmap(cmap)
-        plt.subplot(1,2,2); 
+        plt.subplot(1,2,2)
         plt.imshow(self.michelogram_sinogram,interpolation='nearest')
         plt.set_cmap(cmap)
 
@@ -176,8 +177,3 @@ class Michelogram:
 
     def _repr_svg_(self): 
         return self._svg_string 
-
-
-
-
-

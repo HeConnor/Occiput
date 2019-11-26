@@ -25,7 +25,6 @@ from occiput.Core.Conversion import nipy_to_occiput, nifti_to_occiput, occiput_t
 from occiput.Core.Conversion import occiput_from_array
 
 
-
 class Transform_Affine(object): 
     """Affine transformation. Transformations map from a space to another, e.g. from 
     the space of voxel indices (with unit measure of voxels) to scanner coordinates 
@@ -60,9 +59,9 @@ class Transform_Affine(object):
                 X = obj.map_from
             else: 
                 X = "X"
-            print "Affine is incompatible with the given object: composing [%s,%s] \
+            print("Affine is incompatible with the given object: composing [%s,%s] \
                 with [%s,%s] is not allowed. "\
-                %( self.map_to,self.map_from,self.__space_of_obj(obj),X )
+                %( self.map_to,self.map_from,self.__space_of_obj(obj),X ))
         data = numpy.dot(self.data,obj.data)
         # return an affine transformation is the input was an affine transformation 
         if isinstance(obj,Transform_Affine): 
@@ -111,11 +110,11 @@ class Transform_Affine(object):
         self.data  = numpy.asarray(dict['data'])
 
     def is_6DOF(self):
-        #tra, rot, axis = self.to_translation_rotation() 
-        #if tra is None: 
+        # tra, rot, axis = self.to_translation_rotation()
+        # if tra is None:
         #    return False
-        #mat = numpy.dot(tr.translation_matrix(tra), tr.rotation_matrix(rot,axis)) 
-        #return tr.is_same_transform(mat,self.data)
+        # mat = numpy.dot(tr.translation_matrix(tra), tr.rotation_matrix(rot,axis))
+        # return tr.is_same_transform(mat,self.data)
         return True # FIXME
         
     # FIXME: implement the following functions (see is_6DOF() )
@@ -130,17 +129,17 @@ class Transform_Affine(object):
         return tr.is_same_transform(mat,self.data)
 
     def is_rigid(self):
-        #return self.is_9DOF()
+        # return self.is_9DOF()
         return True
 
     def is_rotation(self): 
-        return False # FIXME
+        return False    # FIXME
 
     def is_translation(self):
-        return False # FIXME
+        return False    # FIXME
 
     def is_scale(self): 
-        return False # FIXME
+        return False    # FIXME
 
     def determinant(self): 
         try: 
@@ -156,7 +155,7 @@ class Transform_Affine(object):
         try: 
             rot,axis,point = tr.rotation_from_matrix(mat)
         except ValueError: 
-            #print "Not a rotation matrix. "
+            # print "Not a rotation matrix. "
             return None, None, None
         return tra, rot, axis
 
@@ -176,9 +175,9 @@ class Transform_Affine(object):
         try: 
             rot,rot_axis,point = tr.rotation_from_matrix(mat) 
         except ValueError: 
-            #print "Not a rotation matrix. "
+            # print "Not a rotation matrix. "
             return None, None, None, None
-        #print "Rotation axis: ",rot_axis
+        # print "Rotation axis: ",rot_axis
         return tra, scale, rot, rot_axis
  
     def to_quaternion_translation(self): 
@@ -192,11 +191,10 @@ class Transform_Affine(object):
 
     def derivative_parameters(self, gradient_transformed_image ): 
         pass 
-        #FIXME implement (implemented in case of 6DOF in the derived class Transform_6DOF)
+        # FIXME implement (implemented in case of 6DOF in the derived class Transform_6DOF)
         
     def __get_inverse(self):
-        inverse = Transform_Affine(data = self.__inverse, map_to = self.map_from, \
-            map_from = self.map_to)
+        inverse = Transform_Affine(data = self.__inverse, map_to = self.map_from, map_from = self.map_to)
         return inverse
 
     def __compute_inverse(self):
@@ -266,57 +264,53 @@ class Transform_Affine(object):
     inverse  = property(__get_inverse )
 
 
-
-
-
 class Transform_Identity(Transform_Affine): 
-    def __init__(self,map_from="",map_to=""): 
-        Transform_Affine.__init__(self, numpy.eye(4),map_from,map_to)     
+    def __init__(self, map_from="", map_to=""):
+        Transform_Affine.__init__(self, numpy.eye(4), map_from, map_to)
 
 
-#class Transform_Scale(Transform_Affine): 
-#    def __init__(self, factor, origin=None, direction=None, map_from="",map_to="" ): 
+# class Transform_Scale(Transform_Affine):
+#    def __init__(self, factor, origin=None, direction=None, map_from="", map_to="" ):
 #        mat = tr.scale_matrix(factor, origin, direction)
-#        Transform_Affine.__init__(self, mat, map_from,map_to)
-class Transform_Scale(Transform_Affine):  #FIXME: figure out what transformations.py means by scale matrix 
-    def __init__(self, scale_xyz, map_from="",map_to="" ): 
-        mat = numpy.diag([scale_xyz[0],scale_xyz[1],scale_xyz[2],1]) 
+#        Transform_Affine.__init__(self, mat, map_from, map_to)
+
+
+class Transform_Scale(Transform_Affine):    # FIXME: figure out what transformations.py means by scale matrix
+    def __init__(self, scale_xyz, map_from="", map_to=""):
+        mat = numpy.diag([scale_xyz[0], scale_xyz[1], scale_xyz[2], 1])
         Transform_Affine.__init__(self, mat, map_from, map_to)
 
 
 class Transform_Rotation(Transform_Affine): 
-    def __init__(self, angle, direction, point=None, map_from="",map_to=""): 
+    def __init__(self, angle, direction, point=None, map_from="", map_to=""):
         mat = tr.rotation_matrix(angle, direction, point)
-        Transform_Affine.__init__(self, mat,map_from,map_to)
+        Transform_Affine.__init__(self, mat, map_from, map_to)
 
-    def derivative_parameters(self, gradient_transformed_image ): 
+    def derivative_parameters(self, gradient_transformed_image):
         pass 
 
-class Transform_Translation(Transform_Affine): 
-    def __init__(self, direction, map_from="",map_to=""): 
-        mat = tr.translation_matrix(direction)     
-        Transform_Affine.__init__(self, mat,map_from,map_to)
 
-    def derivative_parameters(self, gradient_transformed_image ): 
+class Transform_Translation(Transform_Affine): 
+    def __init__(self, direction, map_from="", map_to=""):
+        mat = tr.translation_matrix(direction)     
+        Transform_Affine.__init__(self, mat, map_from, map_to)
+
+    def derivative_parameters(self, gradient_transformed_image):
         pass
 
+
 class Transform_6DOF(Transform_Affine): 
-    def __init__(self, translation, rotation_angle, rotation_direction, rotation_point=None, map_from="",map_to=""): 
+    def __init__(self, translation, rotation_angle, rotation_direction, rotation_point=None, map_from="", map_to=""):
         rot = tr.rotation_matrix(rotation_angle, rotation_direction, rotation_point) 
         tra = tr.translation_matrix(translation) 
-        mat = numpy.dot(tra,rot)
-        Transform_Affine.__init__(self, mat,map_from,map_to) 
+        mat = numpy.dot(tra, rot)
+        Transform_Affine.__init__(self, mat, map_from, map_to)
 
-    def derivative_parameters(self, gradient_transformed_image, grid_transformed_image ): 
+    def derivative_parameters(self, gradient_transformed_image, grid_transformed_image):
         dRx = []
         dRy = []
         dRz = []
-        return [0,0,0,0,0,0]
-        
-
-
-
-
+        return [0, 0, 0, 0, 0, 0]
 
 
 class GridND(object):
@@ -326,32 +320,32 @@ class GridND(object):
         self.space = space 
         self.__clear_cache() 
         self.__is_uniform = is_uniform 
-        self.__is_affine  = is_affine 
+        self.__is_affine = is_affine
         self.__is_axis_aligned = is_axis_aligned 
 
     def min(self): 
-        if self.__min  is None: 
-            self.__min = eval('self.data%s'%('.min(0)'*self.ndim))
+        if self.__min is None:
+            self.__min = eval('self.data%s' % ('.min(0)'*self.ndim))
         return self.__min
 
     def max(self): 
-        if self.__max  is None:
-            self.__max = eval('self.data%s'%('.max(0)'*self.ndim))
+        if self.__max is None:
+            self.__max = eval('self.data%s' % ('.max(0)'*self.ndim))
         return self.__max 
 
     def span(self): 
-        if self.__span  is None:
+        if self.__span is None:
             self.__span = self.max() - self.min() 
         return self.__span 
 
-    def center(self,use_corners_only=True): 
-        if self.__center  is None or (self.__use_corners_only != use_corners_only): 
+    def center(self, use_corners_only=True):
+        if self.__center is None or (self.__use_corners_only != use_corners_only):
             if use_corners_only: 
                 corners = self.corners()
                 center = corners.mean(1)
             else: 
                 center = None 
-                #FIXME: implement 
+                # FIXME: implement
             self.__center = center
             self.__use_corners_only = use_corners_only
         return self.__center
@@ -359,15 +353,15 @@ class GridND(object):
     def mean_distance_from_point(self, point, use_corners_only=True): 
         if use_corners_only: 
             corners = self.corners()
-            dist = corners - numpy.tile( numpy.asarray(point).reshape(3,1),[1,corners.shape[1]] ) 
-            dist =  numpy.sqrt((dist * dist)).sum(1) / corners.shape[1]
+            dist = corners - numpy.tile(numpy.asarray(point).reshape(3, 1), [1, corners.shape[1]])
+            dist = numpy.sqrt((dist * dist)).sum(1) / corners.shape[1]
         else:
             dist = None
-            #FIXME: implement 
+            # FIXME: implement
         return dist 
 
     def mean_dist_from_center(self): 
-        if self.__mean_dist_center  is None: 
+        if self.__mean_dist_center is None:
             center = self.center() 
             self.__mean_dist_center = self.mean_distance_from_point(center) 
         return self.__mean_dist_center
@@ -378,7 +372,7 @@ class GridND(object):
     def is_uniform(self): 
         """Returns True if the grid is uniform. """
         return self.__is_uniform
-        #FIXME: change the flags when grid is transformed 
+        # FIXME: change the flags when grid is transformed
     
     def is_affine(self): 
         """Returns True if the grid is the affine transformation of a uniform grid. """
@@ -389,22 +383,22 @@ class GridND(object):
         return self.__is_axis_aligned 
 
     def transform(self, affine_from_grid): 
-        return transform_grid(self, affine_from_grid )
+        return transform_grid(self, affine_from_grid)
 
     def corners(self, homogeneous_coords=False): 
-        if self.__corners  is None: 
-            n_corners = 2**self.ndim 
+        if self.__corners is None:
+            n_corners = 2 ** self.ndim
             corners = []
             for i in range(n_corners): 
-                b = eval( '['+bin(i)[2:].zfill(self.ndim).replace('0','0,').replace('1','1,') +"]" )
-                b = (numpy.asarray(self.data.shape[0:self.ndim])-1) * numpy.asarray(b)
-                s = str(b.tolist())[1:-1]
-                corner = eval('self.data[%s,:]'%s)
+                b = eval('['+bin(i)[2:].zfill(self.ndim).replace('0', '0,').replace('1', '1,') + "]")
+                b = (numpy.asarray(self.data.shape[0: self.ndim]) - 1) * numpy.asarray(b)
+                s = str(b.tolist())[1: -1]
+                corner = eval('self.data[%s,:]' % s)
                 corners.append(corner)
             corners = numpy.asarray(corners).transpose() 
             if homogeneous_coords: 
-                corners2 = numpy.ones((4,n_corners))
-                corners2[0:3,:] = corners
+                corners2 = numpy.ones((4, n_corners))
+                corners2[0: 3, :] = corners
                 corners = corners2
             self.__corners = corners
         return self.__corners
@@ -412,10 +406,10 @@ class GridND(object):
     def __get_data(self):
         return self.__data 
     
-    def __set_data(self,data): 
+    def __set_data(self, data):
         self.__data = data
         if data is not None: 
-            self.ndim = self.data.ndim-1 
+            self.ndim = self.data.ndim - 1
         else: 
             self.ndim = None
         self.__clear_cache() 
@@ -424,8 +418,8 @@ class GridND(object):
         return self.data.shape 
     
     def __clear_cache(self): 
-        self.__min  = None 
-        self.__max  = None 
+        self.__min = None
+        self.__max = None
         self.__span = None
         self.__center = None
         self.__use_corners_only = None
@@ -442,9 +436,9 @@ class GridND(object):
                 type = 'uniform'
             else: 
                 type = ''
-            if type!='': 
-                type = " (%s)"%type
-            s = "Grid%dD %s: "%(int(self.ndim),type)
+            if type != '':
+                type = " (%s)" % type
+            s = "Grid%dD %s: " % (int(self.ndim), type)
             s = s + "\n - space -------------------> " + str(self.space)
             s = s + "\n - shape -------------------> " + str(list(self.shape)) 
             s = s + "\n - min ---------------------> " + str(self.min()) 
@@ -466,29 +460,31 @@ class GridND(object):
             type = 'uniform'
         else: 
             type = ''
-        if type!='': 
-            type = " (%s)"%type
-        s = "Grid%dD %s: "%(int(self.ndim),type)
+        if type != '':
+            type = " (%s)" % type
+        s = "Grid%dD %s: " % (int(self.ndim), type)
+
         def pretty(list):
             return str(['{0:.2f}'.format(flt) for flt in list])
-        table_data = [[s,'','','','','',''],
-                      ['space','shape','min','max','span','center','spread'],
-                      [str(self.space), pretty(self.shape) ,pretty(self.min()) ,pretty(self.max()) ,pretty(self.span()) ,pretty(self.center()) ,pretty(self.mean_dist_from_center())], ] 
+        table_data = [[s, '', '', '', '', '', ''],
+                      ['space', 'shape', 'min', 'max', 'span', 'center', 'spread'],
+                      [str(self.space), pretty(self.shape), pretty(self.min()), pretty(self.max()),
+                       pretty(self.span()), pretty(self.center()), pretty(self.mean_dist_from_center())], ]
         table = ipy_table.make_table(table_data)
         table = ipy_table.apply_theme('basic')
-        table = ipy_table.set_cell_style(0,0, column_span=7)
-        table = ipy_table.set_cell_style(0,0, align='center') 
+        table = ipy_table.set_cell_style(0, 0, column_span=7)
+        table = ipy_table.set_cell_style(0, 0, align='center')
         table = ipy_table.set_row_style(1, color='#F7F7F7')
         table = ipy_table.set_row_style(2, color='#F7F7F7')
-        table = ipy_table.set_row_style(0,color='#CCFF99')
-        table = ipy_table.set_row_style(1, bold = True)
-        table = ipy_table.set_row_style(1, align = 'center')
+        table = ipy_table.set_row_style(0, color='#CCFF99')
+        table = ipy_table.set_row_style(1, bold=True)
+        table = ipy_table.set_row_style(1, align='center')
         table = ipy_table.set_global_style(float_format="%3.3f")        
         s = table._repr_html_() 
         return s
 
-    data = property(__get_data, __set_data )
-    shape = property(__get_shape )
+    data = property(__get_data, __set_data)
+    shape = property(__get_shape)
 
     
 class Grid3D(GridND):
@@ -497,15 +493,11 @@ class Grid3D(GridND):
         self.ndim = 3
 
 
-
-
-
-
 class ImageND(object): 
     def __init__(self, data=None, affine=None, space="", mask_flag=0):
-        self.ndim   = None
+        self.ndim = None
         self.space = ""
-        if isinstance(data,str): 
+        if isinstance(data, str):
             self.load_from_file(data)
         else: 
             self.set_data(data)
@@ -513,7 +505,7 @@ class ImageND(object):
         self.set_space(space)
 
         self.background = global_settings.get_default_background() 
-        self.use_gpu    = global_settings.is_gpu_enabled() 
+        self.use_gpu = global_settings.is_gpu_enabled()
         
         self.set_mask_flag(mask_flag)
 
@@ -525,7 +517,7 @@ class ImageND(object):
         that, however, that this reports the state of a flag; the data can be non-integer. )"""
         return self.__is_mask 
 
-    def set_lookup_table(self,lut): 
+    def set_lookup_table(self, lut):
         """Set a lookup table for visualization. """
         self.__lut = lut 
 
@@ -536,31 +528,31 @@ class ImageND(object):
             lut = None 
         return lut
 
-    def set_data(self,data): 
-        if isinstance(data,numpy.ndarray): 
+    def set_data(self, data):
+        if isinstance(data, numpy.ndarray):
             self.data = data
         else:   
             self.data = numpy.asarray([]) 
         self.ndim = self.data.ndim
 
     def min(self): 
-        return self.data.min() #FIXME: pass on optional parameters
+        return self.data.min()  # FIXME: pass on optional parameters
     
     def max(self): 
-        return self.data.max() #FIXME: pass on optional parameters
+        return self.data.max()  # FIXME: pass on optional parameters
 
-    def set_affine(self,affine): 
-        if isinstance(affine,Transform_Affine): 
+    def set_affine(self, affine):
+        if isinstance(affine, Transform_Affine):
             self.affine = affine
-        elif isinstance(affine,numpy.ndarray): 
+        elif isinstance(affine, numpy.ndarray):
             self.affine = Transform_Affine(data=affine)
         elif affine is None: 
             self.affine = Transform_Identity()  
         else: 
-            print "'affine' must be an instance of Affine"
+            print("'affine' must be an instance of Affine")
         self.affine.map_to = self.space        
         
-    def set_space(self,space): 
+    def set_space(self, space):
         self.affine.map_to = space
         self.space = space 
         self.affine.map_from = "index" 
@@ -569,46 +561,50 @@ class ImageND(object):
         return self.data.shape 
 
     def get_world_grid(self, n_points=None): 
-        if n_points  is None: 
+        if n_points is None:
             n_points = self.get_shape() 
         grid = grid_from_box_and_affine(self.get_world_grid_min(), self.get_world_grid_max(), n_points) 
         return grid
 
     def get_world_grid_min(self): 
         d = self.get_data()
-        s = numpy.asarray(d.shape)-1
-        corners = numpy.asarray([ [0,0,0,1], [s[0],0,0,1], [0,s[1],0,1], [s[0],s[1],0,1], [0,0,s[2],1], [s[0],0,s[2],1], [0,s[1],s[2],1], [s[0],s[1],s[2],1] ]).transpose()
+        s = numpy.asarray(d.shape) - 1
+        corners = numpy.asarray([[0, 0, 0, 1], [s[0], 0, 0, 1], [0, s[1], 0, 1],
+                                 [s[0], s[1], 0, 1], [0, 0, s[2], 1], [s[0], 0, s[2], 1],
+                                 [0, s[1], s[2], 1], [s[0], s[1], s[2], 1]]).transpose()
         corners = self.affine.left_multiply(corners)
-        corners=corners[0:3,:]
+        corners = corners[0: 3, :]
         m = corners.min(1)
         return m
          
     def get_world_grid_max(self): 
         d = self.get_data()
-        s = numpy.asarray(d.shape)-1
-        corners = numpy.asarray([ [0,0,0,1], [s[0],0,0,1], [0,s[1],0,1], [s[0],s[1],0,1], [0,0,s[2],1], [s[0],0,s[2],1], [0,s[1],s[2],1], [s[0],s[1],s[2],1] ]).transpose()
+        s = numpy.asarray(d.shape) - 1
+        corners = numpy.asarray([[0, 0, 0, 1], [s[0], 0, 0, 1], [0, s[1], 0, 1],
+                                 [s[0], s[1], 0, 1], [0, 0, s[2], 1], [s[0], 0, s[2], 1],
+                                 [0, s[1], s[2], 1], [s[0], s[1], s[2], 1]]).transpose()
         corners = self.affine.left_multiply(corners)
-        corners=corners[0:3,:]
+        corners = corners[0: 3, :]
         M = corners.max(1)
         return M
 
     def get_pixel_grid(self): 
-        print "get_pixel_grid"
+        print("get_pixel_grid")
         n_points = numpy.uint32(self.shape)
-        grid = grid_from_box_and_affine(numpy.asarray([0,0,0]), n_points-1, n_points) 
+        grid = grid_from_box_and_affine(numpy.asarray([0, 0, 0]), n_points - 1, n_points)
         return grid
 
-    def transform(self,affine): 
-        if not isinstance(affine,Transform_Affine): 
-            print "Transformation must be an instance of Affine."
+    def transform(self, affine):
+        if not isinstance(affine, Transform_Affine):
+            print("Transformation must be an instance of Affine.")
             # FIXME raise error
             return None
         self.affine = affine.left_multiply(self.affine)
-        #return self 
+        # return self
 
     def save_to_file(self, filename): 
         nii = occiput_to_nifti(self)
-        nibabel.save(nii,filename)
+        nibabel.save(nii, filename)
 
     def __get_shape(self):
         return self.data.shape 
@@ -620,7 +616,7 @@ class ImageND(object):
         return copy.copy(self)
 
     shape = property(__get_shape)
-    size  = property(__get_size)
+    size = property(__get_size)
 
 
 class Image3D(ImageND):
@@ -628,32 +624,32 @@ class Image3D(ImageND):
         ImageND.__init__(self, data, affine, space)
         self.ndim = 3 
 
-    def compute_resample_on_grid(self,grid,affine_grid_to_world=None, verify_mapping=True,interpolation_mode=INTERPOLATION_LINEAR): 
+    def compute_resample_on_grid(self, grid, affine_grid_to_world=None, verify_mapping=True, interpolation_mode=INTERPOLATION_LINEAR):
         resampled_data = resample_image_on_grid(self, grid, affine_grid_to_world, verify_mapping, self.background, self.use_gpu, interpolation_mode)
         # create new Image3D object
-        return Image3D(data=resampled_data) #FIXME: perhaps just return the raw resampled data
+        return Image3D(data=resampled_data)     # FIXME: perhaps just return the raw resampled data
     
-    def compute_resample_in_box(self,box_min,box_max,box_n): 
+    def compute_resample_in_box(self, box_min, box_max, box_n):
         pass 
 
-    def compute_resample_in_space_of_image(self,image): 
+    def compute_resample_in_space_of_image(self, image):
         pass 
 
     def compute_gradient_on_grid(self, grid, affine_grid_to_world=None, verify_mapping=True): 
         resampled_data = resample_image_on_grid(self, grid, affine_grid_to_world, verify_mapping, self.background, self.use_gpu)
         # create new Image3D object
-        #print resampled_data.max()
-        gradient_data = numpy.gradient(resampled_data) #FIXME: use NiftyPy
+        # print resampled_data.max()
+        gradient_data = numpy.gradient(resampled_data)  # FIXME: use NiftyPy
         return gradient_data
         
-    def compute_gradient_in_box(self,box): 
+    def compute_gradient_in_box(self, box):
         pass 
     
-    def compute_gradient_in_space_of_image(self,image): 
+    def compute_gradient_in_space_of_image(self, image):
         pass 
 
     def compute_gradient_pixel_space(self):
-        gradient_data = numpy.gradient(self.data)  #FIXME: use NiftyPy
+        gradient_data = numpy.gradient(self.data)   # FIXME: use NiftyPy
         return gradient_data
 
     def compute_smoothed(self, smoothing): 
@@ -662,7 +658,7 @@ class Image3D(ImageND):
     def get_data(self):
         return self.data 
 
-    def export_image(self,index,axis=0,normalise=True,scale_factor=None,shrink=None,rotate=0): 
+    def export_image(self, index, axis=0, normalise=True, scale_factor=None, shrink=None, rotate=0):
         pass 
 
     def has_data(self): 
@@ -678,50 +674,50 @@ class Image3D(ImageND):
         D = self.display(axis) 
         D.display_in_browser() 
 
-    def display(self, axis=0,shrink=None,rotate=None,subsample_slices=None,scales=None,open_browser=None): 
+    def display(self, axis=0, shrink=None, rotate=None, subsample_slices=None, scales=None, open_browser=None):
         # The following is a quick fix: use MultipleVolumesNiftyPy if the image has small size, 
         # MultipleVolumes otherwise. MultipleVolumesNiftyPy makes use of the GPU but crashes with large images. 
         # NOTE that MultipleVolumes produces a different visualisation from MultipleVolumesNiftyPy: 
         # it displays the raw imaging data, without accounting for the transformation to world space. 
         # Modify MultipleVolumesNiftyPy so that it processes the data in sequence if it is too large for the GPU. 
         # Then get rid of  MultipleVolumes. 
-        #if self.size <= 256**3: 
+        # if self.size <= 256**3:
         #    D = MultipleVolumesNiftyPy([self],axis,open_browser=open_browser) 
-        #else: 
-        D = MultipleVolumes([self],axis=axis,shrink=shrink,rotate=rotate,subsample_slices=subsample_slices,scales=scales,open_browser=open_browser)
+        # else:
+        D = MultipleVolumes([self], axis=axis, shrink=shrink, rotate=rotate, subsample_slices=subsample_slices, scales=scales, open_browser=open_browser)
         return D 
 
-    def display_with(self, other_images, axis=0,shrink=None,rotate=None,subsample_slices=None,scales=None,open_browser=None): 
-        if isinstance(other_images, type( () )): 
+    def display_with(self, other_images, axis=0, shrink=None, rotate=None, subsample_slices=None, scales=None, open_browser=None):
+        if isinstance(other_images, type(())):
             other_images = list(other_images)
-        elif isinstance(other_images, type( [] )): 
+        elif isinstance(other_images, type([])):
             other_images = other_images
         else: 
-            other_images = [other_images,]
-        D = MultipleVolumes([self,]+other_images,axis=axis,shrink=shrink,rotate=rotate,subsample_slices=subsample_slices,scales=scales,open_browser=open_browser)
+            other_images = [other_images, ]
+        D = MultipleVolumes([self, ] + other_images, axis=axis, shrink=shrink, rotate=rotate, subsample_slices=subsample_slices, scales=scales, open_browser=open_browser)
         return D 
 
-    def display_slice(self,axis=0,index=None,open_browser=False): 
+    def display_slice(self, axis=0, index=None, open_browser=False):
         if index is None: 
-            if axis==0: 
-                index = numpy.uint32(self.shape[0]/2)
-            if axis==1: 
-                index = numpy.uint32(self.shape[1]/2)
-            if axis==2: 
-                index = numpy.uint32(self.shape[2]/2)
-            if axis==0: 
-                a = self.data[index,:,:].reshape((self.shape[1],self.shape[2]))  
-            if axis==1: 
-                a = self.data[:,index,:].reshape((self.shape[0],self.shape[2]))  
-            if axis==2: 
-                a = self.data[:,:,index].reshape((self.shape[0],self.shape[1]))          
+            if axis == 0:
+                index = numpy.uint32(self.shape[0] / 2)
+            if axis == 1:
+                index = numpy.uint32(self.shape[1] / 2)
+            if axis == 2:
+                index = numpy.uint32(self.shape[2] / 2)
+            if axis == 0:
+                a = self.data[index, :, :].reshape((self.shape[1], self.shape[2]))
+            if axis == 1:
+                a = self.data[:, index, :].reshape((self.shape[0], self.shape[2]))
+            if axis == 2:
+                a = self.data[:, :, index].reshape((self.shape[0], self.shape[1]))
         D = DisplayNode.DisplayNode()
         im = Image.fromarray(a).convert("RGB").rotate(90)
         D.display('image', im, open_browser) 
         return D 
     
-    def volume_render(self,scale=1.0): 
-        V = VolumeRenderer(self,scale=scale) 
+    def volume_render(self, scale=1.0):
+        V = VolumeRenderer(self, scale=scale)
         return V.display() 
 
     def _repr_html_(self): 
@@ -729,10 +725,9 @@ class Image3D(ImageND):
         if display: 
             return display._repr_html_()
 
-
     # Overload math operators
     def _is_same_type(self, other): 
-        return isinstance(other,self.__class__)
+        return isinstance(other, self.__class__)
 
     def _is_in_same_space(self, other): 
         # FIXME: implement
@@ -747,16 +742,16 @@ class Image3D(ImageND):
             if self._is_in_same_space(other): 
                 if self._is_on_same_grid(other): 
                     out = self.copy() 
-                    out.data = out.data+other.data 
+                    out.data = out.data + other.data
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "SUM of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("SUM of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "SUM of images not in the same space. It cannot be done. "
+                print("SUM of images not in the same space. It cannot be done. ")
         else: 
-            out=self.copy()
+            out = self.copy()
             out.data = out.data+other
             return out
         return None 
@@ -769,14 +764,14 @@ class Image3D(ImageND):
                     out.data = out.data-other.data 
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "SUB of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("SUB of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "SUB of images not in the same space. It cannot be done. "
+                print("SUB of images not in the same space. It cannot be done. ")
         else: 
-            out=self.copy()
-            out.data = out.data-other
+            out = self.copy()
+            out.data = out.data - other
             return out
         return None
     
@@ -785,17 +780,17 @@ class Image3D(ImageND):
             if self._is_in_same_space(other): 
                 if self._is_on_same_grid(other): 
                     out = self.copy() 
-                    out.data = out.data*other.data 
+                    out.data = out.data * other.data
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "MUL of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("MUL of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "MUL of images not in the same space. It cannot be done. "
+                print("MUL of images not in the same space. It cannot be done. ")
         else: 
-            out=self.copy()
-            out.data = out.data*other
+            out = self.copy()
+            out.data = out.data * other
             return out
         return None
     
@@ -804,17 +799,17 @@ class Image3D(ImageND):
             if self._is_in_same_space(other): 
                 if self._is_on_same_grid(other): 
                     out = self.copy() 
-                    out.data = out.data/other.data 
+                    out.data = out.data / other.data
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "DIV of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("DIV of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "DIV of images not in the same space. It cannot be done. "
+                print("DIV of images not in the same space. It cannot be done. ")
         else: 
-            out=self.copy()
-            out.data = out.data/other
+            out = self.copy()
+            out.data = out.data / other
             return out
         return None
             
@@ -832,14 +827,14 @@ class Image3D(ImageND):
                     out.data = other.data - out.data
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "SUB of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("SUB of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "SUB of images not in the same space. It cannot be done. "
+                print("SUB of images not in the same space. It cannot be done. ")
         else: 
-            out=self.copy()
-            out.data = other-out.data
+            out = self.copy()
+            out.data = other - out.data
             return out
         return None
 
@@ -851,18 +846,13 @@ class Image3D(ImageND):
                     out.data = other.data / out.data
                     return out
                 else: 
-                    #FIXME: implement 
-                    print "DIV of images on different grids; the right hand side image must be resampled, please implement this."
+                    # FIXME: implement
+                    print("DIV of images on different grids; the right hand side image must be resampled, please implement this.")
             else: 
                 # FIXME: raise error 
-                print "DIV of images not in the same space. It cannot be done. "
+                print("DIV of images not in the same space. It cannot be done. ")
         else: 
             out = self.copy()
             out.data = other / out.data
             return out
         return None
-    
-
-
-
-

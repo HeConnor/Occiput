@@ -2,8 +2,6 @@
 # occiput  
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
-
-
 __all__ = ['KSpace', 'MR_Static_Scan', 'MR_Dynamic_Scan'] 
 
 # Import occiput: 
@@ -46,17 +44,14 @@ from occiput.global_settings import *
 set_verbose_no_printing()
 #set_verbose_high()
 
-
 INTERPOLATION_COMPLEXPLANE = 0
 INTERPOLATION_POLAR        = 1
-
 
 
 class SequenceParameters(): 
     def __init__(self):
         self.Tr = 0.020
         self.name = 'Flash'
-
 
 
 class KSpace: 
@@ -157,7 +152,6 @@ class MR_Static_Scan:
         table = ipy_table.set_global_style(float_format="%3.3f")        
         return table._repr_html_() 
 
-  
 
 class MR_Dynamic_Scan: 
     def __init__(self): 
@@ -185,7 +179,7 @@ class MR_Dynamic_Scan:
                     else: 
                         use_frame=False 
                 if use_frame: 
-                    print "time frame: %d / %d "%(framei,n_frames) 
+                    print("time frame: %d / %d "%(framei,n_frames))
                     if framei==0: 
                         image_tr = image 
                     else: 
@@ -265,5 +259,3 @@ class MR_Dynamic_Scan:
         table = ipy_table.apply_theme('basic_left')
         table = ipy_table.set_global_style(float_format="%3.3f")        
         return table._repr_html_() 
-
-

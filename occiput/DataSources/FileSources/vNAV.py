@@ -21,32 +21,37 @@ BOX_MAX      = [50.0,50.0,50.0]
 THRESHOLD_MM = 1.1
 LINE_COLOR   = "#2f8dff"
 
+
 def quaternion_to_rotation(q,axes='sxyz'): 
     return tr.euler_from_quaternion(q,axes) 
+
 
 def angle_axis_to_quaternion(angle_rad,axis):
     f = numpy.sin(0.5*angle_rad)
     quaternion = numpy.asarray( [numpy.cos(0.5*angle_rad),f*axis[0],f*axis[1],f*axis[2]] )
     return quaternion
 
+
 def angle_axis_to_rotation(angle_rad,axis): 
     quaternion = angle_axis_to_quaternion(angle_rad,axis)
     rotation = quaternion_to_rotation(quaternion) 
     return rotation
 
+
 def affine_from_quaternion(q,axes='sxyz'): 
     pass 
+
 
 def quaternion_from_matrix(affine):
     return tx.quaternion_from_matrix(affine)
 
-def rad_to_deg(rad): 
+
+def rad_to_deg(rad):
     return numpy.asarray(rad)*180.0/numpy.pi
-    
+
+
 def deg_to_rad(deg): 
     return numpy.asarray(deg)/180.0*numpy.pi
-
-
 
 
 class vNAV_MPRage(): 
@@ -88,12 +93,12 @@ class vNAV_MPRage():
         self._motion            = [] 
 
         self._paths = []
-        self._tx = []; self._ty = []; self._tz = []; 
-        self._rx = []; self._ry = []; self._rz = []; 
-        self._tx_comm = []; self._ty_comm = []; self._tz_comm = [];
-        self._rx_comm = []; self._ry_comm = []; self._rz_comm = [];
-        self._q0_comm = []; self._q1_comm = []; self._q2_comm = []; self._q3_comm = []; 
-        self._a0_comm = []; self._a1_comm = []; self._a2_comm = []; self._a3_comm = []; 
+        self._tx = [], self._ty = [], self._tz = []
+        self._rx = [], self._ry = [], self._rz = []
+        self._tx_comm = [], self._ty_comm = [], self._tz_comm = []
+        self._rx_comm = [], self._ry_comm = [], self._rz_comm = []
+        self._q0_comm = [], self._q1_comm = [], self._q2_comm = [], self._q3_comm = []
+        self._a0_comm = [], self._a1_comm = [], self._a2_comm = [], self._a3_comm = []
         N=0 
 
         # pick the first dicom file found in path 
@@ -119,12 +124,12 @@ class vNAV_MPRage():
                 try: 
                     f = dicom.read_file(full_path) 
                 except: 
-                    print "Could not read file ",full_path
+                    print("Could not read file ",full_path)
                     return 
                 t = f.get(0x00191025).value 
                 r = f.get(0x00191026).value 
-                self._tx.append(t[0]); self._ty.append(t[1]); self._tz.append(t[2]); 
-                self._rx.append(r[0]); self._ry.append(r[1]); self._rz.append(r[2]); 
+                self._tx.append(t[0]), self._ty.append(t[1]), self._tz.append(t[2])
+                self._rx.append(r[0]), self._ry.append(r[1]), self._rz.append(r[2])
                 motion_dicom_moco = []
                 
                 # extract moco information stored in the dicom comment field
@@ -141,10 +146,10 @@ class vNAV_MPRage():
                         a = numpy.float32([0,1,0,0])  #FIXME: is this right?
                 
                     q = angle_axis_to_quaternion(a.copy()[0],a.copy()[1:4]) 
-                    self._a0_comm.append(a[0]); self._a1_comm.append(a[1]); self._a2_comm.append(a[2]); self._a3_comm.append(a[3]); 
-                    self._tx_comm.append(t[0]); self._ty_comm.append(t[1]); self._tz_comm.append(t[2])
-                    self._q0_comm.append(q[0]); self._q1_comm.append(q[1]); self._q2_comm.append(q[2]); self._q3_comm.append(q[3]); 
-                    self._rx_comm.append(r[0]); self._ry_comm.append(r[1]); self._rz_comm.append(r[2]); 
+                    self._a0_comm.append(a[0]), self._a1_comm.append(a[1]), self._a2_comm.append(a[2]), self._a3_comm.append(a[3])
+                    self._tx_comm.append(t[0]), self._ty_comm.append(t[1]), self._tz_comm.append(t[2])
+                    self._q0_comm.append(q[0]), self._q1_comm.append(q[1]), self._q2_comm.append(q[2]), self._q3_comm.append(q[3])
+                    self._rx_comm.append(r[0]), self._ry_comm.append(r[1]), self._rz_comm.append(r[2])
 
 
                     tra_mat = tr.translation_matrix(t) 
@@ -403,7 +408,7 @@ class vNAV_MPRage():
             dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
  
     def get_mean_displacement_variation(self, index, method='box', box_min=BOX_MIN, box_max=BOX_MAX):
@@ -426,7 +431,7 @@ class vNAV_MPRage():
             #dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
 
     def get_mean_displacement_variation_since_time(self, index_new, index_old, method='box', box_min=BOX_MIN, box_max=BOX_MAX):
@@ -446,7 +451,7 @@ class vNAV_MPRage():
             #dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
 
         

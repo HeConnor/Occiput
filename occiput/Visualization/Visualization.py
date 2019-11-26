@@ -19,10 +19,7 @@ class InstallationError(Exception):
     def __init__(self, message):
         Exception.__init__(self, message)
 
-        
-    
-    
-    
+
 class ProgressBar(): 
     def __init__(self, height='6px', width='100%%', background_color=C.LIGHT_BLUE, foreground_color=C.BLUE): 
         self._percentage = 0.0
@@ -63,11 +60,6 @@ class ProgressBar():
 
     def get_percentage(self):
         return self._percentage
-
-
-
-
-
 
 
 class MultipleVolumes(): 
@@ -204,11 +196,6 @@ class MultipleVolumes():
         return self.display()._repr_html_()
         
 
-
-
-
-
-
 class MultipleVolumesNiftyPy(): 
     def __init__(self,volumes,axis=0,open_browser=None): 
         self.volumes = volumes 
@@ -294,19 +281,12 @@ class MultipleVolumesNiftyPy():
         return self.display()._repr_html_()
 
 
-
-
-
-
-
-
 def deg_to_rad(deg):
     return deg*numpy.pi/180.0
 
+
 def rad_to_deg(rad):
     return rad*180.0/numpy.pi
-
-
 
 
 try: 
@@ -318,9 +298,6 @@ else:
     has_NiftyPy = True
 
 
-
-
-
 class SPECT_Projection(): 
     """SPECT projection object. """
     def __init__(self, data): 
@@ -328,7 +305,7 @@ class SPECT_Projection():
     
     def get_data(self):
         """Returns the raw projection data (note that is can be accessed also as self.data ). """
-        return data
+        return self.data
 
     def save_to_file(self, filename): 
         h5f = h5py.File(filename, 'w')
@@ -428,9 +405,6 @@ class VolumeRenderer():
 
     def _repr_html_(self):
         return self.display()
-
-
-
 
 
 H_graph = """
@@ -582,8 +556,8 @@ function tick() {
 </script>
 """
 
-
 import json 
+
 
 class Graph(): 
     def __init__(self, graph): 
@@ -603,8 +577,6 @@ class Graph():
         graph = HTML( self.get_html() )
         return graph._repr_html_() 
 
-    
-
 
 ## ipy_table 
 #FIXME: perhaps move this somewhere else
@@ -613,11 +585,9 @@ try:
     import ipy_table 
     has_ipy_table = True
 except: 
-    print "Please install ipy_table (e.g. 'easy_install ipy_table') to enable ipython notebook tables. "
+    print("Please install ipy_table (e.g. 'easy_install ipy_table') to enable ipython notebook tables. ")
     ipy_table = None 
     has_ipy_table = False
-
-
 
 
 ## svg_write
@@ -627,13 +597,6 @@ try:
     import svgwrite
     has_svgwrite = True
 except: 
-    print "Please install svgwrite (e.g. 'easy_install svgwrite') to enable svg visualisations. "
+    print("Please install svgwrite (e.g. 'easy_install svgwrite') to enable svg visualisations. ")
     svgwrite = None
     has_svgwrite = False
-
-
-
-
-        
-
-    

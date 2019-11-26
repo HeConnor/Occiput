@@ -3,17 +3,14 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 # Code to generate subsets for OSEM (ordered subsets expectation maximization) and algorithms of that sort, such 
 # as stochastic optimization. 
-
 
 __all__ = ["SubsetGenerator"]
 
 from numpy import isscalar, linspace, int32, uint32, ones, zeros, pi, sqrt, float32, float64, where, ndarray, nan
 from numpy import inf, asarray, concatenate, fromfile, maximum, exp, asfortranarray, fliplr, transpose 
 from numpy.random import randint 
-
 
 
 class SubsetGenerator():  
@@ -86,5 +83,3 @@ class SubsetGenerator():
                 M[:,active_axial] = 1
                 n+=1
         return M
-
-    

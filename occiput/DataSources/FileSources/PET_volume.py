@@ -41,7 +41,7 @@ def import_interfile_volume_data(headerfile='', datafile=''):  #FIXME: this shou
                     try: 
                         data = fromfile(datafile3,dtype=float32)
                     except: 
-                        print "Data file not found."
+                        print("Data file not found.")
         else: 
             data = fromfile(datafile,dtype=float32)
         data = data.reshape([Nz,Ny,Nx])
@@ -49,6 +49,7 @@ def import_interfile_volume_data(headerfile='', datafile=''):  #FIXME: this shou
         data = transpose(data,[1,0,2])
         data = data[::-1,:,:]
         return data    
+
 
 def import_interfile_volume(headerfile='', datafile=''): 
         # Load ndarray data 

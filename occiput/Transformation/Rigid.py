@@ -20,14 +20,11 @@ try:
     from NiftyPy.NiftyReg import gaussian_smoothing
 except: 
     has_NiftyPy = False
-    print "Please install NiftyPy"
+    print("Please install NiftyPy")
 else: 
     has_NiftyPy = True 
 
 import numpy
-
-
-
 
 
 class ModelRigidSSD(Model): 
@@ -44,7 +41,7 @@ class ModelRigidSSD(Model):
         source    = self.get_value('source')
         target    = self.get_value('target')
         #return -.5*numpy.dot(numpy.dot((x-mu),hessian),(x-mu).T)
-        FIXME
+        # FIXME
         return 0
 
     def log_conditional_probability_gradient_transformation(self,T): 
@@ -53,10 +50,6 @@ class ModelRigidSSD(Model):
         #return -.5*numpy.dot((x-mu),hessian+hessian.T) 
         # FIXME
         return numpy.random.rand(6)*4/30000
-
-
-
-
 
 
 class RigidTransformationSSD(): 
@@ -127,4 +120,3 @@ class RigidTransformationSSD():
 
     transformation   = property(_get_transformation, _set_transformation, None)
     resampled_source = property(_get_resampled_source, None, None)
-

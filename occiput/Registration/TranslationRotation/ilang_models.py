@@ -8,13 +8,16 @@ from occiput.Core import Image3D, Grid3D, Transform_6DOF
 from ilang.Models import Model 
 
 
+class SSD_ilang(Model):
+    variables = {'source': 'continuous',
+                 'target': 'continuous',
+                 'transformation': 'continuous',
+                 'sigma': 'continuous'}
+    dependencies = [['source', 'target', 'directed'],
+                    ['transformation', 'target', 'directed'],
+                    ['sigma', 'target', 'directed']]
 
-
-class SSD_ilang( Model ):
-    variables = {'source':'continuous','target':'continuous','transformation':'continuous','sigma':'continuous'} 
-    dependencies = [['source','target','directed'],['transformation','target','directed'],['sigma','target','directed']]
-
-    def __init__( self, name=None ):
+    def __init__(self, name=None):
         if name == None:  
             name = self.__class__.__name__
         Model.__init__(self, name) 
@@ -38,14 +41,3 @@ class SSD_ilang( Model ):
 
     def init(self): 
         pass 
-
-
-
-
-
-
-
-
-
-
-

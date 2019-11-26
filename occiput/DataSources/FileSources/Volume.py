@@ -19,8 +19,6 @@ with warnings.catch_warnings():
     import nipy
 
 
-
-
 def import_nifti(filename): 
     nip = nipy.load_image(filename)
     return nipy_to_occiput(nip)
@@ -65,7 +63,6 @@ def import_dicom(search_path, extension='IMA'):
     return images 
 
 
-
 def import_dicom_series(path, files_start_with=None, files_end_with=None, exclude_files_end_with=['.dat','.txt','.py','.pyc','.nii','.gz'] ):
         """Rudimentary file to load dicom serie from a directory. """ 
         N=0 
@@ -102,4 +99,3 @@ def import_dicom_series(path, files_start_with=None, files_end_with=None, exclud
             array[:,:,i] = slice 
         #return occiput_from_array(array)
         return array
-    

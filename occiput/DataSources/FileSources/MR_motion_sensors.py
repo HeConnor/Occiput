@@ -64,9 +64,9 @@ class Motion_Sensor:
     def _reset(self):
         self._motion = []
         self._n_time_points = 0 
-        self._tx = []; self._ty = []; self._tz = []; 
-        self._rx = []; self._ry = []; self._rz = []; 
-        self._q0 = []; self._q1 = []; self._q2 = []; self._q3 = [];
+        self._tx = [], self._ty = [], self._tz = []
+        self._rx = [], self._ry = [], self._rz = []
+        self._q0 = [], self._q1 = [], self._q2 = [], self._q3 = []
 
     def get_n_time_points(self):
         return self._n_time_points
@@ -282,7 +282,7 @@ class Motion_Sensor:
             dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
  
     def get_mean_displacement_variation(self, index, method='box', box_min=BOX_MIN, box_max=BOX_MAX):
@@ -305,7 +305,7 @@ class Motion_Sensor:
             #dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
 
     def get_mean_displacement_variation_since_time(self, index_new, index_old, method='box', box_min=BOX_MIN, box_max=BOX_MAX):
@@ -325,7 +325,7 @@ class Motion_Sensor:
             #dist = (corners-corners_t).sum(0)
             mean_displ = numpy.mean(dist)
         else: 
-            raise "Method to compute mean displacement is unknown. "
+            raise("Method to compute mean displacement is unknown. ")
         return mean_displ
 
         

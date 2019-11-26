@@ -17,7 +17,6 @@ with __warnings.catch_warnings():
     from nipy.io.nifti_ref import nifti2nipy as nifti_to_nipy
 
 
-
 def nipy_to_occiput(img): 
     """Convert nipy image to Occiput ImageND image.
     
@@ -27,9 +26,9 @@ def nipy_to_occiput(img):
     Returns: 
         ImageND: occiput image. """
     if img.ndim == 3: 
-        img2 = __occiput.Core.Image3D(data=img.get_data(),affine=img.affine,space="world") 
+        img2 = __occiput.Core.Image3D(data=img.get_data(), affine=img.affine, space="world")
     else: 
-        img2 = __occiput.Core.ImageND(data=img.get_data(),affine=img.affine,space="world")   
+        img2 = __occiput.Core.ImageND(data=img.get_data(), affine=img.affine, space="world")
     return img2 
 
 
@@ -55,7 +54,7 @@ def occiput_to_nifti(occ):
     Returns: 
         Nifti: Nifti image. 
     """
-    nii = __nibabel.nifti1.Nifti1Image(occ.data,occ.affine.data) 
+    nii = __nibabel.nifti1.Nifti1Image(occ.data, occ.affine.data)
     return nii
     
 
@@ -71,5 +70,5 @@ def occiput_from_array(array):
     if array.ndim == 3: 
         im = __occiput.Core.Image3D(data=array, space="world") 
     else: 
-        raise("Currently only conversion of 3D arrays is supported. ")
+        raise("Currently only conversion of 3D arrays is supported.")
     return im 

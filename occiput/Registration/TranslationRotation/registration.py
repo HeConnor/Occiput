@@ -42,7 +42,7 @@ class Registration_Two_Images(object):
     def __set_space(self): 
         # make sure that the images are in the same space
         if self.source.space != self.target.space: 
-            raise "Source [%s] and Target [%s] must be in the same space"%(source.space,target.space)
+            raise("Source [%s] and Target [%s] must be in the same space" % (self.source.space, self.target.space))
         self.space = self.source.space 
 
     def set_transformation(self,tr):  
@@ -141,7 +141,6 @@ class Registration_Two_Images(object):
     transformation = property(__get_transformation, set_transformation)
 
 
-
 class Registration_Longitudinal(): 
     def __init__(self, images ): 
         self.__images = images 
@@ -173,10 +172,6 @@ class Registration_Longitudinal():
     
     def __repr__(self): 
         return "Longitudinal registation."
-
-
-
-
 
 
 class Registration_N_Images(): 
@@ -211,6 +206,3 @@ class Registration_N_Images():
     
     def __repr__(self): 
         return "Registration of N images. "
-
-
-

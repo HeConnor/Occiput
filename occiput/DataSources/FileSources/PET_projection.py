@@ -42,7 +42,7 @@ def import_interfile_projection_data(headerfile='', datafile='',load_time=False)
                     try: 
                         data = fromfile(datafile3,dtype=float32)
                     except: 
-                        print "Data file not found."
+                        print("Data file not found.")
         else: 
             data = fromfile(datafile,dtype=float32)
         data = data.reshape([N_sinograms,N_axial,N_planes])
@@ -50,11 +50,14 @@ def import_interfile_projection_data(headerfile='', datafile='',load_time=False)
             try: 
                 duration = int32([0,F['image duration']['value']])*1000
             except: 
-                print "Unable to load image (sinogram) duration. This may determine an incorrect scale and use of randoms and scatter when reconstructing. Set .time_bins manually. "
+                print("Unable to load image (sinogram) duration. "
+                      "This may determine an incorrect scale and use of randoms and scatter when reconstructing. "
+                      "Set .time_bins manually. ")
                 duration = int32([0,0])
         else: 
             duration = int32([0,0])
         return data, duration
+
 
 def import_interfile_projection(headerfile, binning, michelogram, datafile='' ,invert=False, vmin=0.00, vmax=1e10,load_time=False): 
         data, duration = import_interfile_projection_data(headerfile, datafile, load_time=load_time) 
@@ -148,7 +151,6 @@ def export_interfile_projection(sinogram_data_file, projection_data, binning, mi
     data2.tofile(sinogram_data_file)
 
 
-
 def import_PET_Projection( filename ): 
     h5f = h5py.File(filename,'r') 
     offsets   = asarray( h5f['offsets'],order='F' ) 
@@ -171,4 +173,3 @@ def import_PET_Projection( filename ):
                            'n_v':                    int32( h5f['n_v'] ) })
     h5f.close() 
     return PET_Projection(binning, data, offsets, locations, time_bins) 
-

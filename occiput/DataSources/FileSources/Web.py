@@ -2,8 +2,6 @@
 # occiput  
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
-
-
 from occiput.Visualization.Visualization import ProgressBar
 from occiput.DataSources.FileSources.LookupTable import load_freesurfer_lut_file
 
@@ -34,7 +32,7 @@ class Downloader_HTTP():
             if output!=None: 
                 if os.path.exists(output): 
                     if self._verbose: 
-                        print "File",output,"exists, not dowloading." 
+                        print("File",output,"exists, not dowloading.")
                     self._set_percentage(100) 
                     return output 
         self._set_percentage(0) 
@@ -59,7 +57,7 @@ class Downloader_HTTP():
                 if p!=None: 
                     self._set_percentage(p) 
                 if self._verbose:  
-                    print s
+                    print(s)
                 name = self._strip_filename(s) 
                 if name!=None: 
                     self._set_filename(name)
@@ -90,11 +88,12 @@ class Downloader_HTTP():
         if s.find("Saving to")!=-1: 
             name = s.strip("Saving to").strip("\n").strip("“").strip("'").strip("`")
             if self._verbose: 
-                print "Detected name: ",name
+                print("Detected name: ",name)
             return name 
 
     def _set_filename(self,name): 
         self._filename = name 
+
 
 class Dropbox(Downloader_HTTP): 
     pass 
@@ -104,4 +103,3 @@ def download_Dropbox(url, output=None, overwrite=False, verbose=False):
     D = Dropbox()
     D.set_verbose(verbose)
     return D.download(url, output, overwrite) 
-

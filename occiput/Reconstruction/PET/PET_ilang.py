@@ -3,17 +3,14 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 # Abstraction of a PET scanner: probabilistic graphical model
-
-
+import numpy as np
 import ilang 
 import ilang.Models 
 from ilang.Models import Model 
 from ilang.Graphs import ProbabilisticGraphicalModel 
 
-__all__ = ['PET_Static_Poisson','PET_Dynamic_Poisson','ProbabilisticGraphicalModel']
-
+__all__ = ['PET_Static_Poisson', 'PET_Dynamic_Poisson', 'ProbabilisticGraphicalModel']
 
 
 class PET_Static_Poisson(Model): 
@@ -58,10 +55,19 @@ class PET_Static_Poisson(Model):
         return 0    
 
 
-
 class PET_Dynamic_Poisson(Model): 
-    variables = {'lambda':'continuous','alpha':'continuous','roi_1':'continuous','roi_1':'continuous','counts_1':'discrete','counts_2':'discrete'} 
-    dependencies = [['lambda','counts_1','directed'],['lambda','counts_2','directed'],['alpha','counts_1','directed'],['alpha','counts_2','directed'],['roi_1','counts_1','directed'],['roi_2','counts_2','directed']] 
+    variables = {'lambda': 'continuous',
+                 'alpha': 'continuous',
+                 'roi_1': 'continuous',
+                 'roi_1': 'continuous',
+                 'counts_1': 'discrete',
+                 'counts_2': 'discrete'}
+    dependencies = [['lambda', 'counts_1', 'directed'],
+                    ['lambda', 'counts_2', 'directed'],
+                    ['alpha', 'counts_1', 'directed'],
+                    ['alpha', 'counts_2', 'directed'],
+                    ['roi_1', 'counts_1', 'directed'],
+                    ['roi_2', 'counts_2', 'directed']]
 
     def __init__(self, PET_scan, name=None): 
         if name == None:  
@@ -95,19 +101,13 @@ class PET_Dynamic_Poisson(Model):
         return 0 
 
     def log_conditional_probability_gradient_lambda(self): 
-        return numpy.zeros([100,1])
+        return np.zeros([100,1])
 
     def log_conditional_probability_alpha(self): 
         return 0 
 
     def log_conditional_probability_gradient_alpha(self): 
-        return numpy.zeros([100,1])
+        return np.zeros([100,1])
         
     def sample_conditional_probability_counts(self): 
         return 0    
-
-
-
-
-
-        

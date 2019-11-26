@@ -3,12 +3,10 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 # Here is the library of PET scanners! Access to listmode data is provided by an external Package. 
 # Don't be put off, the mechanism is quite simple. 
 
 __all__ = ["Generic","Brain_PET","Biograph_mMR","Discovery_RX","get_scanner_by_name"]
-
 
 from occiput.Reconstruction.PET.PET_meshing import Michelogram
 from numpy import isscalar, linspace, int32, uint32, ones, zeros, pi, sqrt, float32, float64, where, ndarray, nan
@@ -28,7 +26,6 @@ try:
     from Occiput_Interface_Discovery_RX import Discovery_RX
 except: 
     Discovery_RX = None
-
 
 
 class Generic(): 
@@ -79,8 +76,3 @@ def get_scanner_by_name(name):
         return Discovery_RX
     else: 
         return None 
-
-
-    
-
-    

@@ -3,6 +3,7 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
+
 class BaseCollimatorSPECT(): 
     def __init__(self): 
         self._name = "Generic Collimator" 
@@ -94,7 +95,6 @@ class BaseCollimatorSPECT():
         self._psf = 0
 
 
-
 class LEHR(BaseCollimatorSPECT):
     def __init__(self): 
         BaseCollimatorSPECT.__init__(self)
@@ -128,10 +128,7 @@ class HELR(BaseCollimatorSPECT):
         return self._psf 
 
     def _compute_psf(self,energy_kev): 
-        print 1
+        print(1)
         print_low_verbose("Recomputing PSF collimator ..")
         self._need_to_recompute_psf = False
         self._psf = 0
-
-
-

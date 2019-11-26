@@ -2,15 +2,13 @@
 # occiput  
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
-
-
 import ilang 
 import ilang.Models 
-from ilang.Models import Model 
+from ilang.Models import Model
+import numpy as np
 from ilang.Graphs import ProbabilisticGraphicalModel 
 
-__all__ = ['MR_Static_Gaussian','MR_Dynamic_Gaussian','ProbabilisticGraphicalModel']
-
+__all__ = ['MR_Static_Gaussian', 'MR_Dynamic_Gaussian', 'ProbabilisticGraphicalModel']
 
 
 class MR_Static_Gaussian(Model): 
@@ -56,7 +54,6 @@ class MR_Static_Gaussian(Model):
         return 0    
 
 
-
 class MR_Dynamic_Gaussian(Model): 
     variables = {'x':'continuous','sigma':'continuous','roi_1':'continuous','roi_1':'continuous','k_1':'continuous','k_2':'continuous'} 
     dependencies = [['x','k_1','directed'],['x','k_2','directed'],['sigma','k_1','directed'],['sigma','k_2','directed'],['roi_1','k_1','directed'],['roi_2','k_2','directed']] 
@@ -93,19 +90,13 @@ class MR_Dynamic_Gaussian(Model):
         return 0 
 
     def log_conditional_probability_gradient_lambda(self): 
-        return numpy.zeros([100,1])
+        return np.zeros([100,1])
 
     def log_conditional_probability_alpha(self): 
         return 0 
 
     def log_conditional_probability_gradient_alpha(self): 
-        return numpy.zeros([100,1])
+        return np.zeros([100,1])
         
     def sample_conditional_probability_z(self): 
         return 0    
-
-
-
-
-
-        

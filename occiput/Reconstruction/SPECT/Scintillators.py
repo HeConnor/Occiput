@@ -3,6 +3,7 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
+
 class BaseScintillatorSPECT(): 
     def __init__(self): 
         self._name = "Generic Scintillator"
@@ -56,7 +57,3 @@ class Ideal(BaseScintillatorSPECT):
         print_medium_verbose("Recomputing PSF scintillator..")
         self._need_to_recompute_psf = False
         self._psf = 0
-
-
-
-

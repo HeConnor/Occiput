@@ -3,18 +3,15 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 # Interface to list-mode data. In order to cope with various data formats of the list-mode data and 
 # to enable fast decoding, occiput uses a simple plug-in system. The routines 
 # to decode the list-mode data are defined in a C function that is loaded as a plugin. 
 # The simple plugin system handles the compilation of the code. 
 
-
-
 from occiput.Reconstruction.PET.PET_Projection import PET_Projection, PET_Projection_Sparsity
 from occiput.Core.NiftyPy_wrap import PET_listmode_get_measurement_static, PET_listmode_get_measurement
 
-__all__ = ["Listmode_Loader"]
+__all__ = ["ListmodeLoader"]
 
 
 class ListmodeWrapper(): 
@@ -45,7 +42,6 @@ class ListmodeWrapper():
     def get_dynamic_measurement(self): 
         R = PET_listmode_get_dynamic()
         return R['counts'], R['offsets'], R['locations'], R['time_start'], R['time_end'] 
-
 
 
 class ListmodeLoader(): 
@@ -80,6 +76,4 @@ class ListmodeLoader():
         self._LM.bin_events_intrinsic(n_events, binning.N_axial, binning.N_azimuthal, binning.N_u, binning.N_v, time_bins)
         counts,offsets,locations,time_start,time_end = self._LM.get_static_measurement()
         time_bins = int32(linspace(time_start, time_end, 2))
-        return PET_Projection( binning, counts, offsets, locations, time_bins) 
-
-
+        return PET_Projection(binning, counts, offsets, locations, time_bins)

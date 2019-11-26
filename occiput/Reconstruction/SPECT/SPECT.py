@@ -3,7 +3,6 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 from occiput.Reconstruction.SPECT import Scintillators 
 from occiput.Reconstruction.SPECT import Collimators 
 from occiput.DataSources.FileSources import import_nifti 
@@ -27,15 +26,10 @@ from scipy import optimize
 import scipy
 import scipy.signal
 
-
 # Default parameters 
 DEFAULT_ITERATIONS  = 20
 DEFAULT_SUBSET_SIZE = 32
 EPS                 = 1e-9
-
-
-
-
 
 
 class SPECT_Projection(): 
@@ -84,19 +78,15 @@ class SPECT_Projection():
         N_projections = self.data.shape[2]
         N_x = self.data.shape[0]
         N_y = self.data.shape[1]
-        print "SPECT Projection   [N_projections: %d   N_x: %d   N_y: %d]"%(N_projections,N_x,N_y)
+        print("SPECT Projection   [N_projections: %d   N_x: %d   N_y: %d]" % (N_projections,N_x,N_y))
         for i in range( N_projections ): 
-                images.append( self.to_image(data,i,scale=scale,absolute_scale=True) ) 
+                images.append(self.to_image(data,i,scale=scale,absolute_scale=True))
                 progress_bar.set_percentage(i*100.0/N_projections)                         
         progress_bar.set_percentage(100.0)
         return d.display('tipix', images, open_browser)
         
     def _repr_html_(self): 
         return self.display()._repr_html_()
-        
-        
-
-
 
 
 class SubsetGenerator():  
@@ -127,19 +117,13 @@ class SubsetGenerator():
         return M
 
 
-
-
 def deg_to_rad(deg):
     return deg*pi/180.0
+
 
 def rad_to_deg(rad):
     return rad*180.0/pi
     
-
-
-
-
-
 
 class SPECT_Static_Scan(object):
     def __init__(self): 
@@ -389,7 +373,7 @@ class SPECT_Static_Scan(object):
         if psf  is None: 
             psf=self._psf
         if method=="EM": 
-            print "Reconstruction method: EM"
+            print("Reconstruction method: EM")
             for i in range(iterations): 
                 # Subsets: 
                 if subset_size is None:
@@ -415,10 +399,10 @@ class SPECT_Static_Scan(object):
                 activity = activity * update #* self.get_mask().data
 
                 progress_bar.set_percentage((i+1)*100.0/iterations) 
-                #print "Iteration: %d    max act: %f    min act: %f    max proj: %f    min proj: %f    max norm: %f    min norm: %f"%(i, activity.max(), activity.min(), proj.max(), proj.min(), norm.data.max(), norm.data.min() )
+                # print "Iteration: %d    max act: %f    min act: %f    max proj: %f    min proj: %f    max norm: %f    min norm: %f"%(i, activity.max(), activity.min(), proj.max(), proj.min(), norm.data.max(), norm.data.min() )
             progress_bar.set_percentage(100.0)
         elif method=="LBFGS": 
-            print "Reconstruction method: LBFGS-B"
+            print("Reconstruction method: LBFGS-B")
             bounds = [(None,None)] * activity.size
             for i in range(0,activity.size):
                 bounds[i] = (0, None)
@@ -444,14 +428,14 @@ class SPECT_Static_Scan(object):
                     return 0
                 #if any(activity<0): 
                 #    activity[activity<0]=0
-                print "MIN MAX activity: ",activity.min(), activity.max()
-                proj = self.project(activity).data      #FIXME: optionally use subsets 
-                print "MIN MAX proj: ",proj.min(), proj.max()
+                print("MIN MAX activity: ",activity.min(), activity.max())
+                proj = self.project(activity).data      # FIXME: optionally use subsets
+                print("MIN MAX proj: ",proj.min(), proj.max())
                 log_proj = log(proj+eps)
-                print "MIN MAX log_proj: ",log_proj.min(), log_proj.max()
+                print("MIN MAX log_proj: ",log_proj.min(), log_proj.max())
                 log_proj[isinf(log_proj)]=0 
                 d = (-proj.reshape(sinosize) + sinogram.reshape(sinosize) * log_proj.reshape(sinosize)).sum()
-                print "func:",d
+                print("func:", d)
                 return -float64(d)
 
     def get_gradient_activity(self,activity, activity_size, smoothing=0.0):
@@ -469,7 +453,7 @@ class SPECT_Static_Scan(object):
                 norm = self.get_normalization()  
                 back = self.backproject(sinogram.reshape(sinoshape)/proj.reshape(sinoshape)).data+eps
                 grad = (back-norm)
-                #print "SIZE0: ",activity_size, proj.shape, norm.shape, grad.shape
+                # print "SIZE0: ",activity_size, proj.shape, norm.shape, grad.shape
                 kernel = asarray([[0,1,0],[1,-4,1],[0,1,0]])
                 a = activity.reshape([activity_size[0],activity_size[1],activity_size[2]])
                 prior = asfortranarray(smoothing * scipy.signal.convolve2d(a,kernel,'same'))
@@ -569,9 +553,6 @@ class SPECT_Static_Scan(object):
         return self._svg_string    
 
 
-
-
-
 class Gantry(): 
     def __init__(self): 
         self.svg_string = self.make_svg()
@@ -622,8 +603,6 @@ class Gantry():
 
     def _repr_svg_(self): 
         return self.svg_string 
-
-
 
 
 class GE_Infinia(SPECT_Static_Scan):

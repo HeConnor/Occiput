@@ -3,14 +3,12 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
 # This file defines a PET projection: the data structure that contains projection data. 
 # In occiput.io, the projection data is of two types: sparse or non-sparse. 
 # The sparse projection data is memory efficient and leads to efficient projection and 
 # back-projection. Low memory is necessary in order to use hundreds or thousands of sinograms 
 # for dynamic and kinetic imaging. There is a single object to represent projection data, 
 # with a flag that sets the type: sparse or non-sparse. The ray-tracer knows how to handle the projection data object.  
-
 
 import occiput 
 from occiput.Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite 
@@ -26,7 +24,6 @@ from numpy import inf, asarray, concatenate, fromfile, maximum, exp, asfortranar
 from numpy.random import poisson
 
 
-
 __all__ = ["DEFAULT_BINNING","Binning", "PET_Projection_Sparsity", "PET_Projection",
           "PET_compress_projection", "PET_uncompress_projection", "PET_initialize_compression_structure","display_PET_Projection_geometry",] #"PET_compress_projection_array"] 
 
@@ -38,7 +35,6 @@ def display_PET_Projection_geometry():
     return img 
 
 
-
 EPS = 1e-10
 DEFAULT_BINNING = {      "n_axial":                120,
                          "n_azimuthal":            5,
@@ -48,7 +44,6 @@ DEFAULT_BINNING = {      "n_axial":                120,
                          "size_v":                 256.00,
                          "n_u":                    128,
                          "n_v":                    128,   }
-
 
 
 class Binning(): 
@@ -163,7 +158,6 @@ class Binning():
         return display_PET_Projection_geometry()
         
 
-
 class PET_Projection_Sparsity(): 
     """Represents the sparsity pattern of projection data and implements methods to compress and uncompress data according to the sparsity pattern of self. 
     If offsets and locations are not specified as parameters of the constructor, the data structure represents dense projection data. """
@@ -182,14 +176,14 @@ class PET_Projection_Sparsity():
     def compress_data(self, data): 
         """Compresses an array of uncompressed projection data, according to the sparsity pattern of self (self.offsets and self.locations). """
         compressed_data = PET_compress_projection(self.offsets, data, self.locations, self.N_u, self.N_v)
-        #print "Compression done"
+        # print "Compression done"
         return compressed_data
 
     def uncompress_data(self, data): 
         """Uncompresses a data array that contains projection compressed according to the sparsity pattern of self (self.offsets and self.locations). """
         uncompressed_data = PET_uncompress_projection(self.offsets, data, self.locations, self.N_u, self.N_v)
         uncompressed_data.reshape([self.offsets.shape[1], self.offsets.shape[0], self.N_u, self.N_v]) 
-        #print "Uncompression done"
+        # print "Uncompression done"
         return uncompressed_data
 
     def same_sparsity_as(self, obj): 
@@ -216,17 +210,17 @@ class PET_Projection_Sparsity():
         """Overload the AND operator. """
         if not isinstance(other,self.__class__): 
             raise Exception("Binary operation must be with another object of the same type - PET_Projection_Sparsity. ")
-        print "This is not implemented, it should be implemented at low level. "
+        print("This is not implemented, it should be implemented at low level. ")
 
     def __xor__(self, other): 
         if not isinstance(other,self.__class__): 
             raise Exception("Binary operation must be with another object of the same type - PET_Projection_Sparsity. ")
-        print "This is not implemented, it should be implemented at low level. "
+        print("This is not implemented, it should be implemented at low level. ")
     
     def __or__(self, other): 
         if not isinstance(other,self.__class__): 
             raise Exception("Binary operation must be with another object of the same type - PET_Projection_Sparsity. ")
-        print "This is not implemented, it should be implemented at low level. "
+        print("This is not implemented, it should be implemented at low level. ")
 
     def get_locations_per_plane(self):
         """Returns the number of active locations per projection plane."""
@@ -331,7 +325,7 @@ class PET_Projection():
         # FIXME: verify that the two PET_Projection objects have the same binning 
         if isinstance(projection, PET_Projection): 
             if not projection.is_uncompressed(): 
-                print "Re-compressing projection data, possible data loss. "
+                print("Re-compressing projection data, possible data loss. ")
                 uncompressed_projection = projection.uncompress_self() 
                 uncompressed_data = uncompressed_projection.data
             else: 
@@ -357,10 +351,10 @@ class PET_Projection():
         if self.is_compressed(): 
             return self
         else: 
-            print "Find the zeros and compress. "
-            print "Not implemented. Please implement me. This needs low level implementation. Right now sparsity comes only from listmode data. "
-            #offsets, locations, data = PET_compress_projection_array(self.data, self.N_axial, self.N_azimuthal, self.N_u, self.N_v)
-    #return PET_Projection( self.get_binning(), data, offsets, locations, self.get_time_bins() )
+            print("Find the zeros and compress. ")
+            print("Not implemented. Please implement me. This needs low level implementation. Right now sparsity comes only from listmode data. ")
+            # offsets, locations, data = PET_compress_projection_array(self.data, self.N_axial, self.N_azimuthal, self.N_u, self.N_v)
+    # return PET_Projection( self.get_binning(), data, offsets, locations, self.get_time_bins() )
 
     def uncompress_self(self): 
         """Returns an instance of PET_Projection obtained by zero-filling self. The projection object returned is not sparse. """
@@ -389,7 +383,7 @@ class PET_Projection():
     def same_sparsity_as(self, obj): 
         """Returns True if the argument is an object of type PET_Projection_Sparsity with the same identical sparsity pattern as self. """
         if not hasattr(obj,'sparsity'): 
-            print "PET.py - same_sparsity(): Object of wrong type"  # FIXME:raise input error
+            print("PET.py - same_sparsity(): Object of wrong type")   # FIXME:raise input error
         return self.sparsity.same_sparsity_as(obj.sparsity) 
 
     def is_compressed(self): 
@@ -521,7 +515,7 @@ class PET_Projection():
     def crop(self, bins_range):
         """Crop projection"""
         if self.is_compressed(): 
-            print "Cropping of PET_Projection currently only works with uncompressed data. Please implement for compressed data. "
+            print("Cropping of PET_Projection currently only works with uncompressed data. Please implement for compressed data. ")
             return 
         A = bins_range[0]
         B = bins_range[1]
@@ -612,4 +606,3 @@ class PET_Projection():
 
     def display_geometry(self):
         return display_PET_Projection_geometry()
-
