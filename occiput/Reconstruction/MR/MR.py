@@ -5,16 +5,16 @@
 __all__ = ['KSpace', 'MR_Static_Scan', 'MR_Dynamic_Scan'] 
 
 # Import occiput: 
-from occiput.Core import Image3D
-from occiput.Core import Transform_Identity
-from occiput.Visualization import ProgressBar, svgwrite, has_svgwrite, ipy_table, has_ipy_table
-from occiput.Visualization.Colors import *
-from occiput.DataSources.Synthetic.Shapes import uniform_cylinder
-from occiput.Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite 
-from occiput.Core.NiftyPy_wrap import has_NiftyPy, INTERPOLATION_POINT, INTERPOLATION_LINEAR
-from occiput.DataSources.FileSources.vNAV import load_vnav_mprage
+from ...Core import Image3D
+from ...Core import Transform_Identity
+from ...Visualization import ProgressBar, svgwrite, has_svgwrite, ipy_table, has_ipy_table
+from ...Visualization import *
+from ...DataSources.Synthetic.Shapes import uniform_cylinder
+from ...Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite
+from ...Core.NiftyPy_wrap import has_NiftyPy, INTERPOLATION_POINT, INTERPOLATION_LINEAR
+from ...DataSources.FileSources import load_vnav_mprage
 #from occiput.DataSources.FileSources.MR_motion_sensors import load_motion_sensor_data
-from occiput.DataSources.FileSources import import_nifti
+from ...DataSources.FileSources import import_nifti
 
 # Import DisplayNode for IPython integration
 from DisplayNode import DisplayNode 
@@ -36,7 +36,7 @@ import os
 import h5py 
 
 # Import ilang (inference language; optimisation) 
-from MR_ilang import MR_Static_Gaussian, MR_Dynamic_Gaussian, ProbabilisticGraphicalModel
+from occiput.Reconstruction.MR.MR_ilang import MR_Static_Gaussian, MR_Dynamic_Gaussian, ProbabilisticGraphicalModel
 from ilang.Samplers import Sampler 
 
 # Set verbose level

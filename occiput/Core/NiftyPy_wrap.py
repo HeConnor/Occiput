@@ -10,20 +10,20 @@ library."""
 
 
 import occiput as __occiput
-import numpy as __np
+import numpy as np
 try:
     from NiftyPy.NiftyRec import INTERPOLATION_LINEAR, INTERPOLATION_POINT
-    from NiftyPy.NiftyRec import TR_resample_grid as            __TR_resample_grid 
+    from NiftyPy.NiftyRec import TR_resample_grid as __TR_resample_grid
     from NiftyPy.NiftyRec import TR_grid_from_box_and_affine as __TR_grid_from_box_and_aff 
-    from NiftyPy.NiftyRec import TR_transform_grid as           __TR_transform_grid 
+    from NiftyPy.NiftyRec import TR_transform_grid as __TR_transform_grid
     from NiftyPy.NiftyRec import PET_project_compressed, PET_backproject_compressed 
-    from NiftyPy.NiftyRec import PET_compress_projection, PET_uncompress_projection, 
+    from NiftyPy.NiftyRec import PET_compress_projection, PET_uncompress_projection
     from NiftyPy.NiftyRec import PET_initialize_compression_structure
     from NiftyPy.NiftyRec import SPECT_project_parallelholes
     from NiftyPy.NiftyRec import SPECT_backproject_parallelholes 
     from NiftyPy.NiftyRec import gpu_set, gpu_reset, gpu_list, gpu_exists
 except: 
-    print "NiftyPy could not be loaded: it will not be possible to reconstruct PET data. "
+    print("NiftyPy could not be loaded: it will not be possible to reconstruct PET data. ")
     has_NiftyPy = False
     PET_project_compressed = None
     PET_backproject_compressed = None
@@ -108,8 +108,6 @@ def resample_image_on_grid(image, grid, affine_grid_to_world=None, verify_mappin
       else:
         interpolation_mode = INTERPOLATION_LINEAR 
     # resample: 
-    resampled_data = TR_resample_grid(np.float32(image.data),__np.float32(grid.data),
+    resampled_data = __TR_resample_grid(np.float32(image.data), np.float32(grid.data),
                                       np.float32(affine.data), background, use_gpu, interpolation_mode)
     return resampled_data 
-    
-##########################################################################################

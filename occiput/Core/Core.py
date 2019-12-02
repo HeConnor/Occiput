@@ -13,16 +13,16 @@ import json
 import DisplayNode 
 import copy
 
-from occiput.Visualization import MultipleVolumes, MultipleVolumesNiftyPy, VolumeRenderer
-from occiput.Visualization import ipy_table, has_ipy_table
-from occiput.Core import transformations as tr 
-from occiput import global_settings 
-from occiput.global_settings import printoptions
-from occiput.Core.NiftyPy_wrap import transform_grid, grid_from_box_and_affine
-from occiput.Core.NiftyPy_wrap import resample_image_on_grid
-from occiput.Core.NiftyPy_wrap import INTERPOLATION_LINEAR, INTERPOLATION_POINT
-from occiput.Core.Conversion import nipy_to_occiput, nifti_to_occiput, occiput_to_nifti
-from occiput.Core.Conversion import occiput_from_array
+from ..Visualization import MultipleVolumes, MultipleVolumesNiftyPy, VolumeRenderer
+from ..Visualization import ipy_table, has_ipy_table
+from . import transformations as tr
+from .. import global_settings
+from ..global_settings import printoptions
+from .NiftyPy_wrap import transform_grid, grid_from_box_and_affine
+from .NiftyPy_wrap import resample_image_on_grid
+from .NiftyPy_wrap import INTERPOLATION_LINEAR, INTERPOLATION_POINT
+from .Conversion import nipy_to_occiput, nifti_to_occiput, occiput_to_nifti
+from .Conversion import occiput_from_array
 
 
 class Transform_Affine(object): 
@@ -186,7 +186,7 @@ class Transform_Affine(object):
         return qua, tra 
 
     def from_quaternion_translation(self,quaternion,translation): 
-        rot = quaternion_matrix(quaternion)
+        rot = tr.quaternion_matrix(quaternion)
         return numpy.dot(translation, rot)
 
     def derivative_parameters(self, gradient_transformed_image ): 
@@ -856,3 +856,6 @@ class Image3D(ImageND):
             out.data = other / out.data
             return out
         return None
+
+if __name__ == '__main__':
+    test = Image3D()

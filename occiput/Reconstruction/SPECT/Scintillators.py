@@ -4,7 +4,7 @@
 # Aalto University, Department of Computer Science
 
 
-class BaseScintillatorSPECT(): 
+class BaseScintillatorSPECT:
     def __init__(self): 
         self._name = "Generic Scintillator"
         self._manufacturer = "No manufacturer"
@@ -27,16 +27,16 @@ class BaseScintillatorSPECT():
         dic = self.__dict__
         for k in dic.keys(): 
             if k.startswith('_p_'):
-                parameters[k[3:]]=dic[k]        
+                parameters[k[3:]] = dic[k]
         return parameters
  
-    def get_psf(self,energy_kev): 
-        if self._need_to_recompute_psf or energy_kev!=self._previous_energy_request: 
+    def get_psf(self, energy_kev):
+        if self._need_to_recompute_psf or energy_kev != self._previous_energy_request:
             self._compute_psf(energy_kev)
             self._previous_energy_request = energy_kev
         return self._psf 
 
-    def _compute_psf(self,energy_kev): 
+    def _compute_psf(self, energy_kev):
         print_medium_verbose("Recomputing PSF..")
         self._need_to_recompute_psf = False
         self._psf = 0
@@ -47,13 +47,13 @@ class Ideal(BaseScintillatorSPECT):
         BaseScintillatorSPECT.__init__(self)
         self._name = "Ideal Scintillator"
 
-    def get_psf(self,energy_kev): 
-        if self._need_to_recompute_psf or energy_kev!=self._previous_energy_request: 
+    def get_psf(self, energy_kev):
+        if self._need_to_recompute_psf or energy_kev != self._previous_energy_request:
             self._compute_psf(energy_kev)
             self._previous_energy_request = energy_kev
         return self._psf 
 
-    def _compute_psf(self,energy_kev): 
+    def _compute_psf(self, energy_kev):
         print_medium_verbose("Recomputing PSF scintillator..")
         self._need_to_recompute_psf = False
         self._psf = 0

@@ -8,8 +8,8 @@
 # to decode the list-mode data are defined in a C function that is loaded as a plugin. 
 # The simple plugin system handles the compilation of the code. 
 
-from occiput.Reconstruction.PET.PET_Projection import PET_Projection, PET_Projection_Sparsity
-from occiput.Core.NiftyPy_wrap import PET_listmode_get_measurement_static, PET_listmode_get_measurement
+from .PET_projection import PET_Projection, PET_Projection_Sparsity
+from ...Core.NiftyPy_wrap import PET_listmode_get_measurement_static, PET_listmode_get_measurement
 
 __all__ = ["ListmodeLoader"]
 

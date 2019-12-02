@@ -9,7 +9,7 @@
 __all__ = ["import_interfile_projection", "export_interfile_projection", "import_PET_Projection"] 
 
 
-from occiput.Reconstruction.PET.PET_projection import PET_Projection, Binning, PET_Projection_Sparsity
+from ...Reconstruction.PET import PET_Projection, Binning, PET_Projection_Sparsity
 from interfile import Interfile
 import h5py
 import os

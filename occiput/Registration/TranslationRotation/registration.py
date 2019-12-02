@@ -7,8 +7,8 @@ import numpy
 from .ilang_models import SSD_ilang
 from ilang.Graphs import ProbabilisticGraphicalModel 
 from ilang.Samplers import Sampler 
-from occiput.Visualization import MultipleVolumesNiftyPy
-from occiput.Core import Image3D, Transform_Translation 
+from ...Visualization import MultipleVolumesNiftyPy
+from ...Core import Image3D, Transform_Translation
 
 
 DEFAULT_N_POINTS = [100,100,100]

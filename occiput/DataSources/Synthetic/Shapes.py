@@ -2,7 +2,9 @@
 # occiput  
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
-from occiput.Core import Image3D as __Image3D
+from ...Core import Image3D as __Image3D
+
+
 try: 
     from NiftyPy.NiftyRec import ET_spherical_phantom as __ET_spherical_phantom
     from NiftyPy.NiftyRec import ET_cylindrical_phantom as __ET_cylindrical_phantom

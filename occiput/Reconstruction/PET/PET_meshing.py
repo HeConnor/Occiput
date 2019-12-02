@@ -5,7 +5,7 @@
 
 __all__ = ["Michelogram"] 
 
-from occiput.Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite 
+from ...Visualization import ipy_table, has_ipy_table, svgwrite, has_svgwrite
 from PIL import ImageDraw
 from PIL import Image as PIL 
 from numpy import isscalar, linspace, int32, uint32, ones, zeros, pi, sqrt, float32, float64, where, ndarray, nan

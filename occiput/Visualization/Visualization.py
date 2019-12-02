@@ -3,24 +3,23 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
+from ..global_settings import is_gpu_enabled
+from ..Core.Errors import InstallationError
+from ..Core.Print import deg_to_rad
+
+from ..Visualization import Colors as C
+from ..Visualization.ipynb import is_in_ipynb
+
+from ..Reconstruction.SPECT import SPECT_Projection
+
 from PIL import Image
-import numpy
+import numpy as np
 import uuid
-
-from occiput.global_settings import is_gpu_enabled
 from DisplayNode import DisplayNode
-import Colors as C
 from IPython.display import HTML, display, Javascript
-from ipynb import is_in_ipynb
 
 
-
-class InstallationError(Exception):
-    def __init__(self, message):
-        Exception.__init__(self, message)
-
-
-class ProgressBar(): 
+class ProgressBar:
     def __init__(self, height='6px', width='100%%', background_color=C.LIGHT_BLUE, foreground_color=C.BLUE): 
         self._percentage = 0.0
         self._divid = str(uuid.uuid4()) 
@@ -62,7 +61,7 @@ class ProgressBar():
         return self._percentage
 
 
-class MultipleVolumes(): 
+class MultipleVolumes:
     def __init__(self,volumes,axis=0,shrink=256,rotate=90,subsample_slices=None,scales=None,open_browser=None): 
         self.volumes = volumes 
         self._axis = axis
@@ -75,7 +74,7 @@ class MultipleVolumes():
 
     def get_data(self,volume_index): 
         volume = self.volumes[volume_index] 
-        if isinstance(volume,numpy.ndarray): 
+        if isinstance(volume,np.ndarray):
             return volume
         else:
             # Volume type
@@ -91,11 +90,11 @@ class MultipleVolumes():
         m = self.get_data(volume_index).min()
         
         if axis == 0:
-            a = numpy.float32(self.get_data(volume_index)[slice_index,:,:].reshape((self.get_shape(volume_index)[1],self.get_shape(volume_index)[2]))) 
+            a = np.float32(self.get_data(volume_index)[slice_index,:,:].reshape((self.get_shape(volume_index)[1],self.get_shape(volume_index)[2])))
         elif axis == 1: 
-            a = numpy.float32(self.get_data(volume_index)[:,slice_index,:].reshape((self.get_shape(volume_index)[0],self.get_shape(volume_index)[2])))
+            a = np.float32(self.get_data(volume_index)[:,slice_index,:].reshape((self.get_shape(volume_index)[0],self.get_shape(volume_index)[2])))
         else: 
-            a = numpy.float32(self.get_data(volume_index)[:,:,slice_index].reshape((self.get_shape(volume_index)[0],self.get_shape(volume_index)[1])))
+            a = np.float32(self.get_data(volume_index)[:,:,slice_index].reshape((self.get_shape(volume_index)[0],self.get_shape(volume_index)[1])))
 
         if m>=0: 
             if normalise: 
@@ -124,11 +123,11 @@ class MultipleVolumes():
                         a = a * scale * 512/(M-m+1e-9)                     
             blue = a
             red  = a.copy()
-            red[numpy.where(red>=0)]  = 0 
+            red[np.where(red>=0)]  = 0
             red  = - red
-            blue[numpy.where(blue<0)] = 0 
-            green = numpy.zeros(red.shape)
-            rgb = numpy.zeros((red.shape[0],red.shape[1],3),dtype=numpy.uint8)
+            blue[np.where(blue<0)] = 0
+            green = np.zeros(red.shape)
+            rgb = np.zeros((red.shape[0],red.shape[1],3),dtype=np.uint8)
             rgb[:,:,0]=red
             rgb[:,:,1]=green
             rgb[:,:,2]=blue
@@ -196,7 +195,7 @@ class MultipleVolumes():
         return self.display()._repr_html_()
         
 
-class MultipleVolumesNiftyPy(): 
+class MultipleVolumesNiftyPy:
     def __init__(self,volumes,axis=0,open_browser=None): 
         self.volumes = volumes 
         self._axis = axis
@@ -205,7 +204,7 @@ class MultipleVolumesNiftyPy():
 
     def get_data(self,volume_index): 
         volume = self.volumes[volume_index] 
-        if isinstance(volume,numpy.ndarray): 
+        if isinstance(volume,np.ndarray):
             return volume
         else:
             # Image3D
@@ -238,7 +237,7 @@ class MultipleVolumesNiftyPy():
         box_max = volume.get_world_grid_max() 
         span = box_max-box_min 
         max_span = span.max() 
-        n_points = numpy.uint32(span / max_span * max_size) 
+        n_points = np.uint32(span / max_span * max_size)
         grid = volume.get_world_grid(n_points) 
         n=0
         images = [] 
@@ -249,11 +248,11 @@ class MultipleVolumesNiftyPy():
                 sequence = []
                 for slice_index in range(n_points[axis]): 
                     if axis == 0:
-                        a = numpy.float32(resampled[slice_index,:,:].reshape((resampled.shape[1],resampled.shape[2]))) 
+                        a = np.float32(resampled[slice_index,:,:].reshape((resampled.shape[1],resampled.shape[2])))
                     elif axis == 1: 
-                        a = numpy.float32(resampled[:,slice_index,:].reshape((resampled.shape[0],resampled.shape[2])))
+                        a = np.float32(resampled[:,slice_index,:].reshape((resampled.shape[0],resampled.shape[2])))
                     else: 
-                        a = numpy.float32(resampled[:,:,slice_index].reshape((resampled.shape[0],resampled.shape[1])))
+                        a = np.float32(resampled[:,:,slice_index].reshape((resampled.shape[0],resampled.shape[1])))
                     lookup_table = volume.get_lookup_table()
                     im = self.__array_to_im( a, lookup_table )
                     sequence.append(im.rotate(90))  #FIXME: make optional 
@@ -268,7 +267,7 @@ class MultipleVolumesNiftyPy():
     def __array_to_im(self, a, lookup_table): 
         if lookup_table  is not None: 
             red,green,blue,alpha = lookup_table.convert_ndarray_to_rgba(a)
-            rgb = numpy.zeros((a.shape[0],a.shape[1],3),dtype=numpy.uint8)
+            rgb = np.zeros((a.shape[0],a.shape[1],3),dtype=np.uint8)
             rgb[:,:,0]=red
             rgb[:,:,1]=green
             rgb[:,:,2]=blue
@@ -281,13 +280,6 @@ class MultipleVolumesNiftyPy():
         return self.display()._repr_html_()
 
 
-def deg_to_rad(deg):
-    return deg*numpy.pi/180.0
-
-
-def rad_to_deg(rad):
-    return rad*180.0/numpy.pi
-
 
 try: 
     from NiftyPy.NiftyRec import SPECT_project_parallelholes as projection
@@ -298,64 +290,7 @@ else:
     has_NiftyPy = True
 
 
-class SPECT_Projection(): 
-    """SPECT projection object. """
-    def __init__(self, data): 
-        self.data = data        
-    
-    def get_data(self):
-        """Returns the raw projection data (note that is can be accessed also as self.data ). """
-        return self.data
-
-    def save_to_file(self, filename): 
-        h5f = h5py.File(filename, 'w')
-        h5f.create_dataset('data', data=self.data)
-        #h5f.create_dataset('size_x', data=size_x)
-        #h5f.create_dataset('size_y', data=size_y)
-        h5f.close()
-
-    def get_integral(self): 
-        return self.data.sum() 
-
-    def to_image(self,data,index=0,scale=None,absolute_scale=False): 
-        from PIL import Image
-        a = numpy.float32(data[:,:,index].reshape((data.shape[0],data.shape[1])))   
-        if scale is None:
-            a = 255.0*(a)/(a.max()+1e-12)
-        else: 
-            if absolute_scale: 
-                a = scale*(a) 
-            else: 
-                a = scale*255.0*(a)/(a.max()+1e-12)
-        return Image.fromarray(a).convert("RGB")
-        
-    def display_in_browser(self,axial=True,azimuthal=False,index=0,scale=None): 
-        self.display(axial=axial,azimuthal=azimuthal,index=index,scale=scale,open_browser=True)
-
-    def display(self,scale=None,open_browser=False): 
-        data = self.data
-        d = DisplayNode()
-        images = []
-        progress_bar = ProgressBar(height='6px', width='100%%', background_color=C.LIGHT_GRAY, foreground_color=C.GRAY) 
-        if scale is not None:
-            scale = scale*255.0/(data.max()+1e-12)
-        else: 
-            scale = 255.0/(data.max()+1e-12) 
-        N_projections = self.data.shape[2]
-        N_x = self.data.shape[0]
-        N_y = self.data.shape[1]
-        print("SPECT Projection   [N_projections: %d   N_x: %d   N_y: %d]" % (N_projections, N_x, N_y))
-        for i in range( N_projections ): 
-                images.append(self.to_image(data,i,scale=scale,absolute_scale=True))
-                progress_bar.set_percentage(i*100.0/N_projections)                         
-        progress_bar.set_percentage(100.0)
-        return d.display('tipix', images, open_browser)
-        
-    def _repr_html_(self): 
-        return self.display()._repr_html_()
-        
-
-class VolumeRenderer(): 
+class VolumeRenderer:
     def __init__(self, volume, theta_min_deg=0.0, theta_max_deg=360.0, n_positions=180, truncate_negative=False, psf=None, attenuation=None, scale=1.0): 
         self.volume  = volume 
         self.psf = psf
@@ -368,12 +303,12 @@ class VolumeRenderer():
         self.scale=scale
 
     def __make_cameras(self,axis,direction): 
-        #self.cameras = numpy.float32(numpy.linspace(deg_to_rad(self.theta_min_deg),deg_to_rad(self.theta_max_deg),self.n_positions).reshape((self.n_positions,1))) 
-        self.cameras = numpy.zeros((self.n_positions,3),dtype=numpy.float32)
+        #self.cameras = np.float32(np.linspace(deg_to_rad(self.theta_min_deg),deg_to_rad(self.theta_max_deg),self.n_positions).reshape((self.n_positions,1)))
+        self.cameras = np.zeros((self.n_positions,3),dtype=np.float32)
         self.cameras[:,0] = self.cameras[:,0] + deg_to_rad(axis[0])
         self.cameras[:,1] = self.cameras[:,0] + deg_to_rad(axis[1])
         self.cameras[:,2] = self.cameras[:,0] + deg_to_rad(axis[2])
-        self.cameras[:,direction] = numpy.linspace(deg_to_rad(self.theta_min_deg),deg_to_rad(self.theta_max_deg),self.n_positions)
+        self.cameras[:,direction] = np.linspace(deg_to_rad(self.theta_min_deg),deg_to_rad(self.theta_max_deg),self.n_positions)
         
     def render(self, axis=[90,0,0], direction=0, max_n_points=None): 
         if hasattr(self.volume,'compute_resample_on_grid'):   #i.e. if it is a Image3 
@@ -385,10 +320,10 @@ class VolumeRenderer():
             box_max = volume.get_world_grid_max() 
             span = box_max-box_min 
             max_span = span.max() 
-            n_points = numpy.uint32(span / max_span * max_n_points) 
+            n_points = np.uint32(span / max_span * max_n_points)
             grid = volume.get_world_grid(n_points) 
             volume.compute_resample_on_grid(grid)
-            volume = numpy.float32(volume.data)
+            volume = np.float32(volume.data)
         else: 
             volume = self.volume
         self.__make_cameras(axis, direction)
@@ -591,8 +526,8 @@ except:
     has_ipy_table = False
 
 
-## svg_write
-#FIXME: perhaps move this somewhere else
+# svg_write
+# FIXME: perhaps move this somewhere else
 
 try: 
     import svgwrite

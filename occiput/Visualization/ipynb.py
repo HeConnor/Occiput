@@ -3,6 +3,7 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
+
 def is_in_ipynb(): 
     try:
         from IPython import get_ipython

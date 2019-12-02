@@ -4,7 +4,7 @@
 # Aalto University, Department of Computer Science
 
 
-from occiput.DataSources.FileSources.Volume import import_nifti
+from .Volume import import_nifti
 
 def import_kspace(filename): 
     return import_nifti(filename) 

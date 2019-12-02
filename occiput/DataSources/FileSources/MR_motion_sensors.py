@@ -5,13 +5,13 @@
 
 
 __all__ = ['load_motion_sensor_data'] 
-
-from occiput.Core import Transform_Affine 
+from ...Core import Transform_Affine
+# from ... import Transform_Affine
 import numpy 
 from numpy import float32, int32 
 import matplotlib.pyplot as plt
 import copy 
-from occiput.Core import transformations as tr
+from ...Core import transformations as tr
 
 BOX_MIN      = [-50.0,-50.0,-50.0]
 BOX_MAX      = [50.0,50.0,50.0]

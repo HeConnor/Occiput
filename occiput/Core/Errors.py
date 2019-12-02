@@ -45,3 +45,8 @@ class UnexpectedParameter(Exception):
 
     def __str__(self): 
         return "Unexpected parameter: %s" % (self.msg)
+
+
+class InstallationError(Exception):
+    def __init__(self, message):
+        Exception.__init__(self, message)

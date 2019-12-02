@@ -2,8 +2,8 @@
 # occiput  
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
-from occiput.Visualization.Visualization import ProgressBar
-from occiput.DataSources.FileSources.LookupTable import load_freesurfer_lut_file
+from ...Visualization import ProgressBar
+from .LookupTable import load_freesurfer_lut_file
 
 import subprocess
 import logging

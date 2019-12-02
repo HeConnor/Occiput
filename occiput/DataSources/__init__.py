@@ -3,8 +3,9 @@
 # Harvard University, Martinos Center for Biomedical Imaging 
 # Aalto University, Department of Computer Science
 
-
-import Synthetic
-import FileSources 
+from . import Synthetic
+from . import FileSources
+# import Synthetic
+# import FileSources
 
 

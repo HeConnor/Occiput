@@ -9,8 +9,8 @@ from ilang.Models import Model
 from ilang.Graphs import ProbabilisticGraphicalModel 
 from ilang.Samplers import Sampler
 
-from occiput.Core import Image3D 
-from occiput.Visualization import MultipleVolumes
+from ..Core import Image3D
+from ..Visualization import MultipleVolumes
 
 try: 
     from NiftyPy.NiftyReg import resample_image_rigid

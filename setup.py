@@ -38,16 +38,16 @@ setup(
               'occiput.DataSources.FileSources', 
               'occiput.Visualization',
               ],
-    package_data={'occiput': ['Data/*.pdf','Data/*.png','Data/*.jpg','Data/*.svg', \
-        'Data/*.nii','Data/*.dcm','Data/*.h5','Data/*.txt','Data/*.dat']},
+    package_data={'occiput': ['Data/*.pdf','Data/*.png','Data/*.jpg','Data/*.svg',
+                              'Data/*.nii','Data/*.dcm','Data/*.h5','Data/*.txt','Data/*.dat']},
     scripts=[],
     url='http://www.occiput.io/',
     license='LICENSE.txt',
     description='Tomographic Vision - PET, SPECT, CT, MRI reconstruction and processing.',
     long_description=open('README.rst').read(),
-    keywords = ["PET", "SPECT", "MRI", "computer vision", "artificial intelligence", \
-        "emission tomography", "transmission tomography", "tomographic reconstruction", 
-        "nuclear magnetic resonance"],
+    keywords = ["PET", "SPECT", "MRI", "computer vision", "artificial intelligence",
+                "emission tomography", "transmission tomography", "tomographic reconstruction",
+                "nuclear magnetic resonance"],
     classifiers = [
         "Programming Language :: Python",
         "Development Status :: 4 - Beta",
